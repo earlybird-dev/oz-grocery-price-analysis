@@ -16,3 +16,4 @@ services:
     volumes:
       - .:/home/src/
     restart: on-failure:5
+

@@ -10,12 +10,12 @@ blocks:
   language: python
   name: coles_product_crawler
   retry_config: null
-  status: failed
+  status: executed
   timeout: null
   type: data_loader
   upstream_blocks: []
   uuid: coles_product_crawler
-- all_upstream_blocks_executed: false
+- all_upstream_blocks_executed: true
   color: null
   configuration: {}
   downstream_blocks: []
@@ -52,7 +52,6 @@ settings:
 spark_config: {}
 tags: []
 type: python
-updated_at: '2024-02-26 10:06:30'
 uuid: coles_product_crawler
 variables_dir: /home/src/mage_data/oz-grocery-price-analysis
 widgets: []

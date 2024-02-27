@@ -7,14 +7,10 @@ import datetime
 import time
 
 
-if 'data_loader' not in globals():
-    from mage_ai.data_preparation.decorators import data_loader
-if 'test' not in globals():
-    from mage_ai.data_preparation.decorators import test
-
-
 def scrape_data(driver, category):
     """Scrape product data given a category"""
+
+    # Initialising the webdriver
 
     # Get some sleep bro
     sleep_time = 3
@@ -125,7 +121,6 @@ def scrape_data(driver, category):
     return product_df
 
 
-@data_loader
 def load_data(*args, **kwargs):
     """
     Template code for loading data from any source.
@@ -136,10 +131,10 @@ def load_data(*args, **kwargs):
 
     service = Service()
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless=new")
-    options.add_argument("--no-sandbox")
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument("--start-maximized")
+    # options.add_argument("--headless=new")
+    # options.add_argument("--no-sandbox")
+    # options.add_argument('--disable-dev-shm-usage')
+    # options.add_argument("--start-maximized")
     driver = webdriver.Chrome(service=service, options=options)
 
     categories = [
@@ -170,9 +165,5 @@ def load_data(*args, **kwargs):
     return all_products
 
 
-@test
-def test_output(output, *args) -> None:
-    """
-    Template code for testing the output of the block.
-    """
-    assert output is not None, 'The output is undefined'
+if __name__ == "__main__":
+    load_data()
