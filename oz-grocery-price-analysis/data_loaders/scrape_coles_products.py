@@ -39,19 +39,21 @@ def load_data_from_big_query():
 def scrape_data(driver, coles_cat_l3):
     """Scrape product data given a category"""
 
-    now = datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S')
-    print(f"Started at {now}")
+    now_time = datetime.datetime.now(TZ)
+    now = now_time.strftime('%Y-%m-%d %H:%M:%S')
+    print(f"STARTED at {now}")
 
     SLEEP_TIME = 3
     CSS_SELECTOR = 'coles-targeting-PaginationPaginationItem'
     products = []
 
     for index, cat_l3 in coles_cat_l3.iterrows():
-        
+
         cat_l1_id = cat_l3["cat_l1_id"]
         cat_l2_id = cat_l3["cat_l2_id"]
         cat_l3_id = cat_l3["cat_l3_id"]
         cat_l3_link = cat_l3["cat_l3_link"]
+
         driver.get(cat_l3_link)
         time.sleep(SLEEP_TIME)
 
@@ -62,10 +64,11 @@ def scrape_data(driver, coles_cat_l3):
             total_pages = item.text
         total_pages = max(1, int(total_pages))
 
-        print(f"cat_l1_id: {cat_l1_id}")
-        print(f"cat_l2_id: {cat_l2_id}")
-        print(f"cat_l3_id: {cat_l3_id}")
-        print(f"cat_l3_link: {cat_l3_link}")
+        print(f"{cat_l1_id}/{cat_l2_id}/{cat_l3_id}")
+        # print(f"cat_l1_id: {cat_l1_id}")
+        # print(f"cat_l2_id: {cat_l2_id}")
+        # print(f"cat_l3_id: {cat_l3_id}")
+        # print(f"cat_l3_link: {cat_l3_link}")
         print(f"Total pages: {total_pages}")
 
         # Scrape product data from each page
@@ -157,7 +160,10 @@ def scrape_data(driver, coles_cat_l3):
                 products.append(product_dict)
 
             print(f"# of Products: {product_count}")
-        print(f"Total rows: {len(products)}")
+
+        print()
+        print(f"TOTAL ROWS: {len(products)}")
+        print(datetime.datetime.now(TZ)-now_time)
 
         # if index > 0:
         #     break
@@ -166,7 +172,7 @@ def scrape_data(driver, coles_cat_l3):
 
     print()
     now = datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S')
-    print(f"Finished at {now}")
+    print(f"FINISHED at {now}")
 
     return product_df
 
@@ -196,7 +202,6 @@ def load_data(*args, **kwargs):
     all_products = scrape_data(driver, coles_cat_l3)
 
     print()
-    print(all_products.dtypes)
     print("DONE!!!")
     return all_products
 

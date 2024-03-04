@@ -16,12 +16,12 @@ def export_data_to_big_query(df: DataFrame, **kwargs) -> None:
 
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
-    table_id = 'grocery-price-analysis.raw_data.coles_products'
+    table_id = 'grocery-price-analysis.raw_data.woolies_cat_l1'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
 
     BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).export(
         df,
         table_id,
-        if_exists='append',  # Specify resolution policy if table name already exists
+        if_exists='replace',  # Specify resolution policy if table name already exists
     )
