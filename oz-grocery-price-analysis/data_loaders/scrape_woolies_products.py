@@ -53,6 +53,9 @@ def scrape_data(driver, woolies_cat_l3):
 
     for index, cat_l3 in woolies_cat_l3.iterrows():
 
+        print()
+        print(f"INDEX---------------------------------: {index}")
+
         cat_l1_id = cat_l3["cat_l1_id"]
         cat_l2_id = cat_l3["cat_l2_id"]
         cat_l3_id = cat_l3["cat_l3_id"]
