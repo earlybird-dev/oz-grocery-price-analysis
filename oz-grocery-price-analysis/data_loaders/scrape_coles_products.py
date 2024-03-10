@@ -48,6 +48,9 @@ def scrape_data(driver, coles_cat_l3):
     products = []
 
     for index, cat_l3 in coles_cat_l3.iterrows():
+        
+        print()
+        print(f"INDEX---------------------------------: {index}")
 
         cat_l1_id = cat_l3["cat_l1_id"]
         cat_l2_id = cat_l3["cat_l2_id"]
@@ -60,15 +63,9 @@ def scrape_data(driver, coles_cat_l3):
         # Get number of product pages
         total_pages = 1
         pagination_items = driver.find_elements(By.CLASS_NAME, CSS_SELECTOR)
-        for item in pagination_items:
-            total_pages = item.text
-        total_pages = max(1, int(total_pages))
+        total_pages = max(1, int(len(pagination_items)))
 
         print(f"{cat_l1_id}/{cat_l2_id}/{cat_l3_id}")
-        # print(f"cat_l1_id: {cat_l1_id}")
-        # print(f"cat_l2_id: {cat_l2_id}")
-        # print(f"cat_l3_id: {cat_l3_id}")
-        # print(f"cat_l3_link: {cat_l3_link}")
         print(f"Total pages: {total_pages}")
 
         # Scrape product data from each page
@@ -87,7 +84,7 @@ def scrape_data(driver, coles_cat_l3):
                 product_dict = {}
 
                 # Get query time
-                product_dict['updated_at'] = timeInNewYork = datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S')
+                product_dict['updated_at'] = datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S')
                 product_dict['cat_l1_id'] = cat_l1_id
                 product_dict['cat_l2_id'] = cat_l2_id
                 product_dict['cat_l3_id'] = cat_l3_id
@@ -100,12 +97,29 @@ def scrape_data(driver, coles_cat_l3):
                 except:
                     product_dict['product_tile_hat'] = None
                     
+                # Get product badge
+                try:
+                    product_badge = product_tile.find_element(By.CSS_SELECTOR, 'span.product__badge')
+                    product_dict['product_badge'] = product_badge.text
+                except:
+                    product_dict['product_badge'] = None
+                    
                 # Get product link
                 try:
                     product_link = product_tile.find_element(By.CSS_SELECTOR, 'a.product__link')
                     product_dict['product_link'] = product_link.get_attribute('href')
+                    
                 except:
                     product_dict['product_link'] = None
+
+                # Get product img
+                try:
+                    product_img = product_tile.find_element(By.CSS_SELECTOR, 'a.product__image')                    
+                    product_img_link = product_img.find_element(By.TAG_NAME, 'img')
+                    product_dict['product_img_link'] = product_img_link.get_attribute('src')
+
+                except:
+                    product_dict['product_img'] = None
                     
                 # Get product name
                 try:
@@ -142,14 +156,14 @@ def scrape_data(driver, coles_cat_l3):
                 except:
                     product_dict['product_price_calc_method'] = None
                     
-                # Get product price calculation method
+                # Get product price calculation method desc
                 try:
                     product_price_calc_method_desc = product_tile.find_elements(By.CSS_SELECTOR, 'span.price__calculation_method__description')
                     product_dict['product_price_calc_method_desc'] = (' ').join([item.text for item in product_price_calc_method_desc])
                 except:
                     product_dict['product_price_calc_method_desc'] = None
                     
-                # Get product price calculation method
+                # Get product availability
                 try:
                     product_current_unavailable = product_tile.find_elements(By.CSS_SELECTOR, 'div.coles-targeting-ProductTileCurrentlyUnavailableMessage')
                     product_dict['product_current_unavailable'] = (' ').join([item.text for item in product_current_unavailable])
@@ -165,7 +179,7 @@ def scrape_data(driver, coles_cat_l3):
         print(f"TOTAL ROWS: {len(products)}")
         print(datetime.datetime.now(TZ)-now_time)
 
-        # if index > 0:
+        # if index > 10:
         #     break
 
     product_df = pd.DataFrame(products)
