@@ -10,12 +10,12 @@ blocks:
   language: python
   name: get_woolies_cat_l1
   retry_config: null
-  status: updated
+  status: executed
   timeout: null
   type: data_loader
   upstream_blocks: []
   uuid: get_woolies_cat_l1
-- all_upstream_blocks_executed: false
+- all_upstream_blocks_executed: true
   color: null
   configuration: {}
   downstream_blocks:
@@ -32,7 +32,7 @@ blocks:
   upstream_blocks:
   - get_woolies_cat_l1
   uuid: woolies_cat_l1_to_bigquery
-- all_upstream_blocks_executed: false
+- all_upstream_blocks_executed: true
   color: null
   configuration: {}
   downstream_blocks:
@@ -49,7 +49,7 @@ blocks:
   upstream_blocks:
   - woolies_cat_l1_to_bigquery
   uuid: get_woolies_cat_l2
-- all_upstream_blocks_executed: false
+- all_upstream_blocks_executed: true
   color: null
   configuration: {}
   downstream_blocks:
@@ -66,7 +66,7 @@ blocks:
   upstream_blocks:
   - get_woolies_cat_l2
   uuid: woolies_cat_l2_to_bigquery
-- all_upstream_blocks_executed: false
+- all_upstream_blocks_executed: true
   color: null
   configuration: {}
   downstream_blocks:
@@ -83,7 +83,7 @@ blocks:
   upstream_blocks:
   - woolies_cat_l2_to_bigquery
   uuid: get_woolies_cat_l3
-- all_upstream_blocks_executed: false
+- all_upstream_blocks_executed: true
   color: null
   configuration: {}
   downstream_blocks: []
