@@ -62,6 +62,10 @@ def get_new_woolies_cat_l2(driver, woolies_cat_l1):
     categories = []
 
     for index, cat_l1 in woolies_cat_l1.iterrows():
+        
+        print()
+        print(f'INDEX---------------------------------: {index}')
+
         cat_l1_id = cat_l1['cat_l1_id']
         cat_l1_link = cat_l1['cat_l1_link']
 

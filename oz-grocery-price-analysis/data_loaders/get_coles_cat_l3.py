@@ -64,6 +64,10 @@ def get_new_coles_cat_l3(driver, coles_cat_l2):
     categories = []
 
     for index, cat_l2 in coles_cat_l2.iterrows():
+
+        print()
+        print(f'INDEX---------------------------------: {index}')
+
         cat_l1_id = cat_l2['cat_l1_id']
         cat_l2_id = cat_l2['cat_l2_id']
         cat_l2_link = cat_l2['cat_l2_link']
