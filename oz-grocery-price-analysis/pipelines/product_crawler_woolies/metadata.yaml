@@ -42,7 +42,7 @@ executor_config: {}
 executor_count: 1
 executor_type: null
 extensions: {}
-name: woolies_product_crawler
+name: product_crawler_woolies
 notification_config: {}
 remote_variables_dir: null
 retry_config: {}
@@ -52,6 +52,6 @@ settings:
 spark_config: {}
 tags: []
 type: python
-uuid: woolies_product_crawler
+uuid: product_crawler_woolies
 variables_dir: /home/src/mage_data/oz-grocery-price-analysis
 widgets: []
