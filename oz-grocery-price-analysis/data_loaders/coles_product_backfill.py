@@ -24,17 +24,48 @@ if 'test' not in globals():
 TZ = pytz.timezone('Australia/Sydney') 
 
 
-def load_coles_cat_l3_from_big_query():
+def load_coles_cat_l3_to_backfill():
     """
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
 
-    query = 'SELECT * FROM grocery-price-analysis.raw_data.coles_cat_l3 WHERE newly_added = 1'
+    query_cat_l3 = """ 
+        SELECT
+            *
+        FROM
+            `grocery-price-analysis.raw_data.coles_cat_l3`
+        WHERE
+            newly_added = 1 AND 
+            cat_l3_link NOT IN (
+                SELECT
+                    DISTINCT(cat_l3_link)
+                FROM
+                    `grocery-price-analysis.raw_data.coles_products`
+                WHERE
+                    start_run_time = (
+                        SELECT
+                        MAX(start_run_time)
+                        FROM
+                        `grocery-price-analysis.raw_data.coles_products`
+                    )
+            )
+    """
+
+    query_start_run_time =  """
+        SELECT
+            MAX(start_run_time) AS start_run_time
+        FROM
+            `grocery-price-analysis.raw_data.coles_products`
+
+    """
+
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
     
-    data = BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).load(query)
-    return pd.DataFrame(data)
+    coles_cat_l3 = BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).load(query_cat_l3)
+    start_run_time = BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).load(query_start_run_time)
+
+    return {'coles_cat_l3': pd.DataFrame(coles_cat_l3), 'start_run_time': pd.DataFrame(start_run_time)}
 
 
 def export_product_data_to_big_query(df):
@@ -224,10 +255,14 @@ def load_data(*args, **kwargs):
     options.add_argument('--start-maximized')
     driver = webdriver.Chrome(service=service, options=options)
 
-    start_run_time = datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S')
 
     # Retieve coles level 3 categories
-    coles_cat_l3 = load_coles_cat_l3_from_big_query()
+    data = load_coles_cat_l3_to_backfill()
+    coles_cat_l3 = data['coles_cat_l3']
+    print(coles_cat_l3)
+    start_run_time = data['start_run_time']
+    start_run_time = start_run_time.loc[0, 'start_run_time']
+    print(start_run_time)
 
     # Scrape products data
     number_of_categories = len(coles_cat_l3)

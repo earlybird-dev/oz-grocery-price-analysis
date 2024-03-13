@@ -48,21 +48,6 @@ def get_woolies_cat_l1(driver):
             print("cat_dict", cat_dict)
             categories.append(cat_dict)
 
-    # categories = []
-    # for item in category_items:
-    #     cat_dict = {}
-
-    #     cat_dict["cat_l1_name"] = item.text
-    #     cat_dict["cat_l1_link"] = item.get_attribute('href')
-
-    #     cat_link_split = cat_dict["cat_l1_link"].split("/")
-    #     cat_link_split = [i for i in cat_link_split if i != ""]
-    #     cat_dict["cat_l1_id"] = cat_link_split[-1]
-        
-    #     if ("tobacco" not in cat_dict["cat_l1_id"]) & ("liquor" not in cat_dict["cat_l1_id"]):
-    #         print("cat_dict", cat_dict)
-    #         categories.append(cat_dict)
-
     categories = pd.DataFrame(categories)
     categories = categories[['cat_l1_id', 'cat_l1_name', 'cat_l1_link']]
     return categories

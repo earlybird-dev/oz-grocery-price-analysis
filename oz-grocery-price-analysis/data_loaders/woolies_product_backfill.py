@@ -27,17 +27,48 @@ def get_shadow_root(driver, element):
     return driver.execute_script('return arguments[0].shadowRoot', element)
 
 
-def load_woolies_cat_l3_from_big_query():
+def load_woolies_cat_l3_to_backfill():
     """
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
 
-    query = 'SELECT * FROM grocery-price-analysis.raw_data.woolies_cat_l3 WHERE newly_added = 1'
+    query_cat_l3 = """ 
+        SELECT
+            *
+        FROM
+            `grocery-price-analysis.raw_data.woolies_cat_l3`
+        WHERE
+            newly_added = 1 AND 
+            cat_l3_link NOT IN (
+                SELECT
+                    DISTINCT(cat_l3_link)
+                FROM
+                    `grocery-price-analysis.raw_data.woolies_products`
+                WHERE
+                    start_run_time = (
+                        SELECT
+                        MAX(start_run_time)
+                        FROM
+                        `grocery-price-analysis.raw_data.woolies_products`
+                    )
+            )
+    """
+
+    query_start_run_time =  """
+        SELECT
+            MAX(start_run_time) AS start_run_time
+        FROM
+            `grocery-price-analysis.raw_data.woolies_products`
+
+    """
+
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
     
-    data = BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).load(query)
-    return pd.DataFrame(data)
+    woolies_cat_l3 = BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).load(query_cat_l3)
+    start_run_time = BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).load(query_start_run_time)
+
+    return {'woolies_cat_l3': pd.DataFrame(woolies_cat_l3), 'start_run_time': pd.DataFrame(start_run_time)}
 
 
 def export_product_data_to_big_query(df):
@@ -256,10 +287,13 @@ def load_data(*args, **kwargs):
     options.add_argument('--start-maximized')
     driver = webdriver.Chrome(service=service, options=options)
 
-    start_run_time = datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S')
-
     # Retieve woolies level 3 categories
-    woolies_cat_l3 = load_woolies_cat_l3_from_big_query()
+    data = load_woolies_cat_l3_to_backfill()
+    woolies_cat_l3 = data['woolies_cat_l3']
+    print(woolies_cat_l3)
+    start_run_time = data['start_run_time']
+    start_run_time = start_run_time.loc[0, 'start_run_time']
+    print(start_run_time)
 
     # Scrape products data
     number_of_categories = len(woolies_cat_l3)

@@ -3,18 +3,18 @@ blocks:
   color: null
   configuration: {}
   downstream_blocks:
-  - raw_woolies_product_data_to_bigquery
+  - coles_product_backfill
   executor_config: null
   executor_type: local_python
   has_callback: false
   language: python
-  name: scrape_woolies_products
+  name: woolies_product_backfill
   retry_config: null
-  status: updated
+  status: failed
   timeout: null
   type: data_loader
   upstream_blocks: []
-  uuid: scrape_woolies_products
+  uuid: woolies_product_backfill
 - all_upstream_blocks_executed: false
   color: null
   configuration: {}
@@ -23,26 +23,26 @@ blocks:
   executor_type: local_python
   has_callback: false
   language: python
-  name: raw_woolies_product_data_to_bigquery
+  name: coles_product_backfill
   retry_config: null
   status: executed
   timeout: null
-  type: data_exporter
+  type: data_loader
   upstream_blocks:
-  - scrape_woolies_products
-  uuid: raw_woolies_product_data_to_bigquery
+  - woolies_product_backfill
+  uuid: coles_product_backfill
 cache_block_output_in_memory: false
 callbacks: []
 concurrency_config: {}
 conditionals: []
-created_at: '2024-02-26 08:48:46.634597+00:00'
+created_at: '2024-03-11 09:28:53.024982+00:00'
 data_integration: null
 description: null
 executor_config: {}
 executor_count: 1
 executor_type: null
 extensions: {}
-name: woolies_product_crawler
+name: product_crawler_backfill
 notification_config: {}
 remote_variables_dir: null
 retry_config: {}
@@ -52,6 +52,6 @@ settings:
 spark_config: {}
 tags: []
 type: python
-uuid: woolies_product_crawler
+uuid: product_crawler_backfill
 variables_dir: /home/src/mage_data/oz-grocery-price-analysis
 widgets: []
