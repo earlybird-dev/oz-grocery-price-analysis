@@ -32,7 +32,15 @@ def load_woolies_cat_l3_from_big_query():
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
 
-    query = 'SELECT * FROM grocery-price-analysis.raw_data.woolies_cat_l3 WHERE newly_added = 1'
+    query = """
+        SELECT
+            *
+        FROM
+            grocery-price-analysis.raw_data.woolies_cat_l3
+        WHERE
+            newly_added = 1
+            AND cat_l3_link NOT LIKE "%everyday-market%"
+    """
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
     
