@@ -268,10 +268,10 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
                         except:
                             pass
                         
-                        if 'promoted' in product_sponsor_text:
+                        # if 'promoted' in product_sponsor_text:
                             # print(product_dict['product_name'])
                             # print(product_sponsor_text)
-                            continue
+                            # continue
                         
                         if 'sold by' in product_sold_by_text:
                             # print(product_dict['product_name'])
