@@ -141,7 +141,7 @@ def scrape_data(driver, start_run_time, coles_cat_l3):
                     product_dict['product_img_link'] = product_img_link.get_attribute('src')
 
                 except:
-                    product_dict['product_img'] = ''
+                    product_dict['product_img_link'] = ''
                     
                 # Get product name
                 try:
