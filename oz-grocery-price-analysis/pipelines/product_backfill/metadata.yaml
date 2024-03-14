@@ -10,12 +10,12 @@ blocks:
   language: python
   name: woolies_product_backfill
   retry_config: null
-  status: executed
+  status: updated
   timeout: null
   type: data_loader
   upstream_blocks: []
   uuid: woolies_product_backfill
-- all_upstream_blocks_executed: true
+- all_upstream_blocks_executed: false
   color: null
   configuration: {}
   downstream_blocks: []
@@ -25,7 +25,7 @@ blocks:
   language: python
   name: coles_product_backfill
   retry_config: null
-  status: executed
+  status: updated
   timeout: null
   type: data_loader
   upstream_blocks:

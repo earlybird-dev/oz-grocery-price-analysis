@@ -237,8 +237,6 @@ def scrape_data(driver, start_run_time, coles_cat_l3):
         print()
         export_product_data_to_big_query(product_df)
 
-    return product_df
-
 
 @data_loader   
 def load_data(*args, **kwargs):

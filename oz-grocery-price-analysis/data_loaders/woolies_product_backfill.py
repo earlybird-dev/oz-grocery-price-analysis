@@ -270,8 +270,6 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
         fail_to_get_product_tiles_df = pd.DataFrame(fail_to_get_product_tiles)
         export_fail_attempts_to_big_query(fail_to_get_product_tiles_df)
 
-    return product_df
-
 
 @data_loader   
 def load_data(*args, **kwargs):
