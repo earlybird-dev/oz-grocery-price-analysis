@@ -38,8 +38,9 @@ def load_woolies_cat_l3_to_backfill():
         FROM
             `grocery-price-analysis.raw_data.woolies_cat_l3`
         WHERE
-            newly_added = 1 AND 
-            cat_l3_link NOT IN (
+            newly_added = 1
+            AND cat_l3_link NOT LIKE "%everyday-market%" 
+            AND cat_l3_link NOT IN (
                 SELECT
                     DISTINCT(cat_l3_link)
                 FROM

@@ -2,6 +2,22 @@ blocks:
 - all_upstream_blocks_executed: true
   color: null
   configuration: {}
+  downstream_blocks:
+  - woolies_crawler
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: coles_crawler
+  retry_config: null
+  status: updated
+  timeout: null
+  type: data_loader
+  upstream_blocks: []
+  uuid: coles_crawler
+- all_upstream_blocks_executed: false
+  color: null
+  configuration: {}
   downstream_blocks: []
   executor_config: null
   executor_type: local_python
@@ -12,7 +28,8 @@ blocks:
   status: updated
   timeout: null
   type: data_loader
-  upstream_blocks: []
+  upstream_blocks:
+  - coles_crawler
   uuid: woolies_crawler
 cache_block_output_in_memory: false
 callbacks: []
@@ -25,7 +42,7 @@ executor_config: {}
 executor_count: 1
 executor_type: null
 extensions: {}
-name: product_crawler_woolies
+name: product_crawler
 notification_config: {}
 remote_variables_dir: null
 retry_config: {}
@@ -35,6 +52,6 @@ settings:
 spark_config: {}
 tags: []
 type: python
-uuid: product_crawler_woolies
+uuid: product_crawler
 variables_dir: /home/src/mage_data/oz-grocery-price-analysis
 widgets: []

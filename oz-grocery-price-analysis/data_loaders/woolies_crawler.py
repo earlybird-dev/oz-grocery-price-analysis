@@ -156,6 +156,18 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
                         product_dict['cat_l3_link'] = cat_l3_link
                         product_dict['cat_l3_link_updated_at'] = cat_l3_link_updated_at
 
+
+                        # Get product sponsor text
+                        product_sponsor_text = ''
+                        try:
+                            product_sponsor_text = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-title-container .sponsored-text')
+                            product_sponsor_text = product_sponsor_text.text.strip()
+                        except:
+                            pass
+                        
+                        if 'Promoted' in product_sponsor_text:
+                            continue
+
                         # Get product link
                         try:
                             product_tile_image = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-tile-image')
