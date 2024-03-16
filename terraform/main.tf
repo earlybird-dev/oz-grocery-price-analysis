@@ -15,7 +15,7 @@ provider "google" {
 }
 
 resource "google_cloud_run_service" "default" {
-  name     = "grocery-web-crawler"
+  name     = "grocery-web-scraping"
   location = var.region
 
   template {
