@@ -180,6 +180,32 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
                         product_dict['cat_l3_link'] = cat_l3_link
                         product_dict['cat_l3_link_updated_at'] = cat_l3_link_updated_at
 
+                        # Get product sponsor text
+                        product_sponsor_text = ''
+                        try:
+                            product_sponsor = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-title-container .sponsored-text')
+                            product_sponsor_text = product_sponsor.text.lower()
+                        except:
+                            pass
+                        
+                        # Get product sold by
+                        product_sold_by_text = ''
+                        try:
+                            product_sold_by = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-tile-cart-controls')
+                            product_sold_by_text = product_sold_by.text.lower()
+                        except:
+                            pass
+                        
+                        # if 'promoted' in product_sponsor_text:
+                            # print(product_dict['product_name'])
+                            # print(product_sponsor_text)
+                            # continue
+                        
+                        if 'sold by' in product_sold_by_text:
+                            # print(product_dict['product_name'])
+                            # print(product_sold_by_text)
+                            continue
+
                         # Get product link
                         try:
                             product_tile_image = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-tile-image')
@@ -251,32 +277,6 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
                             product_dict['product_current_unavailable'] = product_current_unavailable.text
                         except:
                             product_dict['product_current_unavailable'] = ''
-
-                        # Get product sponsor text
-                        product_sponsor_text = ''
-                        try:
-                            product_sponsor = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-title-container .sponsored-text')
-                            product_sponsor_text = product_sponsor.text.lower()
-                        except:
-                            pass
-                        
-                        # Get product sold by
-                        product_sold_by_text = ''
-                        try:
-                            product_sold_by = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-tile-cart-controls')
-                            product_sold_by_text = product_sold_by.text.lower()
-                        except:
-                            pass
-                        
-                        # if 'promoted' in product_sponsor_text:
-                            # print(product_dict['product_name'])
-                            # print(product_sponsor_text)
-                            # continue
-                        
-                        if 'sold by' in product_sold_by_text:
-                            # print(product_dict['product_name'])
-                            # print(product_sold_by_text)
-                            continue
                             
                         product_count += 1
                         products.append(product_dict)
