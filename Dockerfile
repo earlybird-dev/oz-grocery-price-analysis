@@ -1,10 +1,13 @@
 FROM mageai/mageai:latest
 
-ARG USER_CODE_PATH=/home/src/${PROJECT_NAME}
+# ARG USER_CODE_PATH=/home/src/${PROJECT_NAME}
+ARG USER_CODE_PATH=/home/src
 
 # Note: this overwrites the requirements.txt file in your new project on first run. 
 # You can delete this line for the second run :) 
 COPY requirements.txt ${USER_CODE_PATH}/requirements.txt 
+COPY grocery-price-analysis-d0419829e9b5.json ${USER_CODE_PATH}/grocery-price-analysis-d0419829e9b5.json
+COPY . ${USER_CODE_PATH}
 
 RUN pip install -r ${USER_CODE_PATH}/requirements.txt
 RUN su -
@@ -28,4 +31,8 @@ RUN dpkg -i google-chrome-stable_114.0.5735.90-1_amd64.deb
 RUN wget -N https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip -P ~/
 RUN unzip -o ~/chromedriver_linux64.zip -d ~/
 RUN rm ~/chromedriver_linux64.zip
+RUN rm google-chrome-stable_114.0.5735.90-1_amd64.deb
 RUN mv -f ~/chromedriver /usr/local/bin/chromedriver
+
+# EXPOSE 6789
+CMD ["mage", "start", "oz-grocery-price-analysis"]
