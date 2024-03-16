@@ -1,7 +1,7 @@
 version: '3'
 services:
   magic:
-    image: trunghadev/grocery-crawler:test2
+    image: trunghadev/grocery-crawler:latest
     command: mage start oz-grocery-price-analysis
     env_file:
       - .env
