@@ -19,7 +19,7 @@ variable "region" {
 variable "docker_image" {
   type        = string
   description = "The docker image to deploy to Cloud Run."
-  default     = "trunghadev/grocery-web-crawler:2.0"
+  default     = "trunghadev/grocery-crawler:test2"
 }
 
 variable "container_cpu" {

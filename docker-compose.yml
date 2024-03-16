@@ -1,15 +1,15 @@
 version: '3'
 services:
   magic:
-    image: mageai/mageai:latest
-    command: mage start ${PROJECT_NAME}
+    image: trunghadev/grocery-crawler:test2
+    command: mage start oz-grocery-price-analysis
     env_file:
       - .env
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      USER_CODE_PATH: /home/src/${PROJECT_NAME}
+      USER_CODE_PATH: /home/src/oz-grocery-price-analysis
       ENV: ${ENV}
     ports:
       - 6789:6789
