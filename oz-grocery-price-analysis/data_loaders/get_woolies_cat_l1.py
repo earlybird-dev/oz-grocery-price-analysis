@@ -76,7 +76,7 @@ def get_new_woolies_cat_l1(driver):
         cat_link_split = [i for i in cat_link_split if i != '']
         cat_dict['cat_l1_id'] = cat_link_split[-1]
         
-        if ('tobacco' not in cat_dict['cat_l1_id']) & ('liquor' not in cat_dict['cat_l1_id']):
+        if 'tobacco' not in cat_dict['cat_l1_id']:
             categories.append(cat_dict)
 
     categories = pd.DataFrame(categories)

@@ -43,7 +43,7 @@ def get_level_2_cat(parent_categories):
             cat_dict["CAT_2"] = item.text
             cat_dict["cat_link"] = item.get_attribute('href')
             if cat_link_cut in cat_dict["cat_link"]:
-                if ("tobacco" not in cat_dict["cat_link"].lower()) & ("liquor" not in cat_dict["cat_link"].lower()):
+                if "tobacco" not in cat_dict["cat_link"].lower():
                     print("cat_dict", cat_dict)
                     categories.append(cat_dict)
     return categories
@@ -78,8 +78,7 @@ def get_level_3_cat(parent_categories):
             cat_dict["CAT_3"] = item.text
             cat_dict["cat_link"] = item.get_attribute('href')
             if cat_link_cut in cat_dict["cat_link"]:
-                if ("tobacco" not in cat_dict["cat_link"].lower()) & ("liquor" not in cat_dict["cat_link"].lower()):
-                    print("cat_dict", cat_dict)
+                if "tobacco" not in cat_dict["cat_link"].lower():
                     categories.append(cat_dict)
     return categories
 

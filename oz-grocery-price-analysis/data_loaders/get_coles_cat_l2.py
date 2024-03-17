@@ -90,7 +90,7 @@ def get_new_coles_cat_l2(driver, coles_cat_l1):
             cat_dict['cat_l2_id'] = cat_link_split[-1]
             
             if (cat_l1_id in cat_dict['cat_l2_link']) & (cat_l1_id != cat_dict['cat_l2_id']):
-                if ('tobacco' not in cat_dict['cat_l2_id']) & ('liquor' not in cat_dict['cat_l2_id']):
+                if 'tobacco' not in cat_dict['cat_l2_id']:
                     categories.append(cat_dict)
 
     categories = pd.DataFrame(categories)
