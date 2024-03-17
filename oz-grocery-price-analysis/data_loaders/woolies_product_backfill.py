@@ -255,7 +255,7 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
                         # Get product sponsor text
                         try:
                             product_sponsor = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-title-container .sponsored-text')
-                            product_sponsor_text = product_sponsor.text.lower()
+                            product_sponsor_text = product_sponsor.text
                             product_dict['product_sponsor'] = product_sponsor_text
                         except:
                             product_dict['product_sponsor'] = ''
@@ -263,7 +263,7 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
                         # Get product sold by
                         try:
                             product_sold_by = shadow_root.find_element(By.CSS_SELECTOR, 'div.shelfProductTile-vendor-information')
-                            product_sold_by_text = product_sold_by.text.lower()
+                            product_sold_by_text = product_sold_by.text
                             product_dict['product_sold_by'] = product_sold_by_text
                         except:
                             product_dict['product_sold_by'] = ''
