@@ -1,12 +1,12 @@
 triggers:
 - envs: []
-  last_enabled_at: 2024-03-17 03:14:06.737947
+  last_enabled_at: 2024-03-17 04:13:35.270928
   name: Daily Run @ 2am
   pipeline_uuid: product_crawler
-  schedule_interval: '0 15 * * * * '
+  schedule_interval: 0 15 * * * *
   schedule_type: time
   settings: null
   sla: null
-  start_time: 2024-03-17 03:03:00
+  start_time: 2024-03-17 04:12:00
   status: active
   variables: {}
