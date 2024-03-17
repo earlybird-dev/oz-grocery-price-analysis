@@ -36,7 +36,7 @@ def load_woolies_cat_l3_to_backfill():
         SELECT
             *
         FROM
-            `grocery-price-analysis.raw_data.woolies_cat_l3`
+            `grocery-price-analysis.scraping_data.woolies_cat_l3`
         WHERE
             newly_added = 1
             AND cat_l3_link NOT LIKE "%everyday-market%" 
@@ -44,13 +44,13 @@ def load_woolies_cat_l3_to_backfill():
                 SELECT
                     DISTINCT(cat_l3_link)
                 FROM
-                    `grocery-price-analysis.raw_data.woolies_products`
+                    `grocery-price-analysis.scraping_data.woolies_products`
                 WHERE
                     start_run_time = (
                         SELECT
                         MAX(start_run_time)
                         FROM
-                        `grocery-price-analysis.raw_data.woolies_products`
+                        `grocery-price-analysis.scraping_data.woolies_products`
                     )
             )
     """
@@ -59,7 +59,7 @@ def load_woolies_cat_l3_to_backfill():
         SELECT
             MAX(start_run_time) AS start_run_time
         FROM
-            `grocery-price-analysis.raw_data.woolies_products`
+            `grocery-price-analysis.scraping_data.woolies_products`
 
     """
 
@@ -77,7 +77,7 @@ def export_product_data_to_big_query(df):
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
 
-    table_id = 'grocery-price-analysis.raw_data.woolies_products'
+    table_id = 'grocery-price-analysis.scraping_data.woolies_products'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
 
@@ -93,7 +93,7 @@ def export_fail_attempts_to_big_query(df):
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
 
-    table_id = 'grocery-price-analysis.raw_data.woolies_cat_l3_fail_attempts'
+    table_id = 'grocery-price-analysis.scraping_data.woolies_cat_l3_fail_attempts'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
 
@@ -180,32 +180,6 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
                         product_dict['cat_l3_link'] = cat_l3_link
                         product_dict['cat_l3_link_updated_at'] = cat_l3_link_updated_at
 
-                        # Get product sponsor text
-                        product_sponsor_text = ''
-                        try:
-                            product_sponsor = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-title-container .sponsored-text')
-                            product_sponsor_text = product_sponsor.text.lower()
-                        except:
-                            pass
-                        
-                        # Get product sold by
-                        product_sold_by_text = ''
-                        try:
-                            product_sold_by = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-tile-cart-controls')
-                            product_sold_by_text = product_sold_by.text.lower()
-                        except:
-                            pass
-                        
-                        # if 'promoted' in product_sponsor_text:
-                            # print(product_dict['product_name'])
-                            # print(product_sponsor_text)
-                            # continue
-                        
-                        if 'sold by' in product_sold_by_text:
-                            # print(product_dict['product_name'])
-                            # print(product_sold_by_text)
-                            continue
-
                         # Get product link
                         try:
                             product_tile_image = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-tile-image')
@@ -277,7 +251,23 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
                             product_dict['product_current_unavailable'] = product_current_unavailable.text
                         except:
                             product_dict['product_current_unavailable'] = ''
-                            
+
+                        # Get product sponsor text
+                        try:
+                            product_sponsor = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-title-container .sponsored-text')
+                            product_sponsor_text = product_sponsor.text.lower()
+                            product_dict['product_sponsor'] = product_sponsor_text
+                        except:
+                            product_dict['product_sponsor'] = ''
+                        
+                        # Get product sold by
+                        try:
+                            product_sold_by = shadow_root.find_element(By.CSS_SELECTOR, 'div.shelfProductTile-vendor-information')
+                            product_sold_by_text = product_sold_by.text.lower()
+                            product_dict['product_sold_by'] = product_sold_by_text
+                        except:
+                            product_dict['product_sold_by'] = ''
+
                         product_count += 1
                         products.append(product_dict)
 

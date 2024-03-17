@@ -27,7 +27,7 @@ def load_coles_cat_l1_from_big_query():
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
 
-    query = 'SELECT * FROM grocery-price-analysis.raw_data.coles_cat_l1 WHERE newly_added = 1'
+    query = 'SELECT * FROM grocery-price-analysis.scraping_data.coles_cat_l1 WHERE newly_added = 1'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
     try:
@@ -42,7 +42,7 @@ def load_coles_cat_l2_from_big_query():
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
 
-    query = 'SELECT * FROM grocery-price-analysis.raw_data.coles_cat_l2'
+    query = 'SELECT * FROM grocery-price-analysis.scraping_data.coles_cat_l2'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
     try:
@@ -90,7 +90,7 @@ def get_new_coles_cat_l2(driver, coles_cat_l1):
             cat_dict['cat_l2_id'] = cat_link_split[-1]
             
             if (cat_l1_id in cat_dict['cat_l2_link']) & (cat_l1_id != cat_dict['cat_l2_id']):
-                if ('tobacco' not in cat_dict['cat_l2_id']) & ('liquor' not in cat_dict['cat_l2_id']):
+                if 'tobacco' not in cat_dict['cat_l2_id']:
                     categories.append(cat_dict)
 
     categories = pd.DataFrame(categories)

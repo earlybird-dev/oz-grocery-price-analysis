@@ -27,7 +27,7 @@ def load_coles_cat_l1_from_big_query():
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
 
-    query = 'SELECT * FROM grocery-price-analysis.raw_data.coles_cat_l1'
+    query = 'SELECT * FROM grocery-price-analysis.scraping_data.coles_cat_l1'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
     try:
@@ -66,7 +66,7 @@ def get_new_coles_cat_l1(driver):
         cat_link_split = [i for i in cat_link_split if i != '']
         cat_dict['cat_l1_id'] = cat_link_split[-1]
         
-        if ('tobacco' not in cat_dict['cat_l1_id']) & ('liquor' not in cat_dict['cat_l1_id']):
+        if 'tobacco' not in cat_dict['cat_l1_id']:
             categories.append(cat_dict)
 
     categories = pd.DataFrame(categories)

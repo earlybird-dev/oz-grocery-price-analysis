@@ -33,20 +33,20 @@ def load_coles_cat_l3_to_backfill():
         SELECT
             *
         FROM
-            `grocery-price-analysis.raw_data.coles_cat_l3`
+            `grocery-price-analysis.scraping_data.coles_cat_l3`
         WHERE
             newly_added = 1 AND 
             cat_l3_link NOT IN (
                 SELECT
                     DISTINCT(cat_l3_link)
                 FROM
-                    `grocery-price-analysis.raw_data.coles_products`
+                    `grocery-price-analysis.scraping_data.coles_products`
                 WHERE
                     start_run_time = (
                         SELECT
                         MAX(start_run_time)
                         FROM
-                        `grocery-price-analysis.raw_data.coles_products`
+                        `grocery-price-analysis.scraping_data.coles_products`
                     )
             )
     """
@@ -55,7 +55,7 @@ def load_coles_cat_l3_to_backfill():
         SELECT
             MAX(start_run_time) AS start_run_time
         FROM
-            `grocery-price-analysis.raw_data.coles_products`
+            `grocery-price-analysis.scraping_data.coles_products`
 
     """
 
@@ -73,7 +73,7 @@ def export_product_data_to_big_query(df):
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
 
-    table_id = 'grocery-price-analysis.raw_data.coles_products'
+    table_id = 'grocery-price-analysis.scraping_data.coles_products'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
 

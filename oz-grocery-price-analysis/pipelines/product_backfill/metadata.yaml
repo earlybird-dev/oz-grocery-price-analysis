@@ -1,9 +1,8 @@
 blocks:
-- all_upstream_blocks_executed: true
+- all_upstream_blocks_executed: false
   color: null
   configuration: {}
-  downstream_blocks:
-  - coles_product_backfill
+  downstream_blocks: []
   executor_config: null
   executor_type: local_python
   has_callback: false
@@ -13,12 +12,14 @@ blocks:
   status: updated
   timeout: null
   type: data_loader
-  upstream_blocks: []
+  upstream_blocks:
+  - coles_product_backfill
   uuid: woolies_product_backfill
-- all_upstream_blocks_executed: false
+- all_upstream_blocks_executed: true
   color: null
   configuration: {}
-  downstream_blocks: []
+  downstream_blocks:
+  - woolies_product_backfill
   executor_config: null
   executor_type: local_python
   has_callback: false
@@ -28,8 +29,7 @@ blocks:
   status: updated
   timeout: null
   type: data_loader
-  upstream_blocks:
-  - woolies_product_backfill
+  upstream_blocks: []
   uuid: coles_product_backfill
 cache_block_output_in_memory: false
 callbacks: []
