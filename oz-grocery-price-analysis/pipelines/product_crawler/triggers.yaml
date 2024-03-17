@@ -1,12 +1,12 @@
 triggers:
 - envs: []
-  last_enabled_at: null
-  name: Run Once
+  last_enabled_at: 2024-03-17 03:14:06.737947
+  name: Daily Run @ 2am
   pipeline_uuid: product_crawler
-  schedule_interval: '@once'
+  schedule_interval: '0 15 * * * * '
   schedule_type: time
   settings: null
   sla: null
-  start_time: 2024-03-17 02:13:00
-  status: inactive
+  start_time: 2024-03-17 03:03:00
+  status: active
   variables: {}
