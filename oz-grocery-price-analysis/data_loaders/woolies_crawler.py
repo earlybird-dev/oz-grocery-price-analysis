@@ -231,7 +231,7 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
                         # Get product sponsor text
                         try:
                             product_sponsor = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-title-container .sponsored-text')
-                            product_sponsor_text = product_sponsor.text.trim()
+                            product_sponsor_text = product_sponsor.text
                             product_dict['product_sponsor'] = product_sponsor_text
                         except:
                             product_dict['product_sponsor'] = ''
@@ -239,7 +239,7 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
                         # Get product sold by
                         try:
                             product_sold_by = shadow_root.find_element(By.CSS_SELECTOR, 'div.shelfProductTile-vendor-information')
-                            product_sold_by_text = product_sold_by.text.trim()
+                            product_sold_by_text = product_sold_by.text
                             product_dict['product_sold_by'] = product_sold_by_text
                         except:
                             product_dict['product_sold_by'] = ''
@@ -275,7 +275,7 @@ def load_data(*args, **kwargs):
     chrome_prefs = {
         "profile.default_content_setting_values": {
             "images": 2,
-            "javascript": 2,
+            #"javascript": 2,
         }
     }
     options.experimental_options["prefs"] = chrome_prefs

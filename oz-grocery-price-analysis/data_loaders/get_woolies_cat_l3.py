@@ -119,7 +119,7 @@ def load_data(*args, **kwargs):
     chrome_prefs = {
         "profile.default_content_setting_values": {
             "images": 2,
-            "javascript": 2,
+            #"javascript": 2,
         }
     }
     options.experimental_options["prefs"] = chrome_prefs
