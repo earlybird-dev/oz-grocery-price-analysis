@@ -191,10 +191,10 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
                         # Get image link
                         try:
                             product_tile_image = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-tile-image')
-                            product_image_url = product_tile_image.find_element(By.TAG_NAME, 'img')
-                            product_dict['product_image_url'] = product_image_url.get_attribute('src')
+                            product_img_link = product_tile_image.find_element(By.TAG_NAME, 'img')
+                            product_dict['product_img_link'] = product_img_link.get_attribute('src')
                         except:
-                            product_dict['product_image_url'] = ''
+                            product_dict['product_img_link'] = ''
                             
                         # Get product badge
                         try:
@@ -270,6 +270,8 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
 
                         product_count += 1
                         products.append(product_dict)
+                        
+                    print("product_count: ", product_count)
 
         # if index > 1:
         #     break
@@ -334,7 +336,7 @@ def load_data(*args, **kwargs):
         scrape_data(driver, start_run_time, sub_woolies_cat_l3)
 
     print()
-    return ''
+    return 'DONE!!!'
 
 
 @test

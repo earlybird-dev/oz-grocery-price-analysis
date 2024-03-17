@@ -157,6 +157,13 @@ def scrape_data(driver, start_run_time, coles_cat_l3):
                 except:
                     product_dict['product_badge'] = ''
                     
+                # Get product top messaging
+                try:
+                    product_top_messaging = product_tile.find_elements(By.CSS_SELECTOR, 'li.product__top_messaging__item')
+                    product_dict['product_top_messaging'] = ('\n').join([item.text for item in product_top_messaging])
+                except:
+                    product_dict['product_top_messaging'] = ''
+                    
                 # Get product link
                 try:
                     product_link = product_tile.find_element(By.CSS_SELECTOR, 'a.product__link')
@@ -184,48 +191,64 @@ def scrape_data(driver, start_run_time, coles_cat_l3):
                 # Get product price
                 try:
                     product_price = product_tile.find_elements(By.CSS_SELECTOR, 'span.price__value')
-                    product_dict['product_price'] = (' ').join([item.text for item in product_price])
+                    product_dict['product_price'] = ('\n').join([item.text for item in product_price])
                 except:
                     product_dict['product_price'] = ''  
 
                 # Get product price was
                 try:
                     product_price_was = product_tile.find_elements(By.CSS_SELECTOR, 'span.price__was')
-                    product_dict['product_price_was'] = (' ').join([item.text for item in product_price_was])
+                    product_dict['product_price_was'] = ('\n').join([item.text for item in product_price_was])
                 except:
                     product_dict['product_price_was'] = ''
                     
                 # Get product badge label
                 try:
                     product_badge_label = product_tile.find_elements(By.CSS_SELECTOR, 'section.badge-label')
-                    product_dict['product_badge_label'] = (' ').join([item.text for item in product_badge_label])
+                    product_dict['product_badge_label'] = ('\n').join([item.text for item in product_badge_label])
                 except:
                     product_dict['product_badge_label'] = ''
                     
                 # Get product price calculation method
                 try:
                     product_price_calc_method = product_tile.find_elements(By.CSS_SELECTOR, 'div.price__calculation_method')
-                    product_dict['product_price_calc_method'] = (' ').join([item.text for item in product_price_calc_method])
+                    product_dict['product_price_calc_method'] = ('\n').join([item.text for item in product_price_calc_method])
                 except:
                     product_dict['product_price_calc_method'] = ''
                     
                 # Get product price calculation method desc
                 try:
                     product_price_calc_method_desc = product_tile.find_elements(By.CSS_SELECTOR, 'span.price__calculation_method__description')
-                    product_dict['product_price_calc_method_desc'] = (' ').join([item.text for item in product_price_calc_method_desc])
+                    product_dict['product_price_calc_method_desc'] = ('\n').join([item.text for item in product_price_calc_method_desc])
                 except:
                     product_dict['product_price_calc_method_desc'] = ''
+                    
+                # Get product promotion
+                try:
+                    product_promotion = product_tile.find_elements(By.CSS_SELECTOR, 'span.product_promotion')
+                    product_dict['product_promotion'] = ('\n').join([item.text for item in product_promotion])
+                except:
+                    product_dict['product_promotion'] = ''
+                    
+                # Get product short desc
+                try:
+                    product_short_desc = product_tile.find_elements(By.CSS_SELECTOR, 'span.product__short_description')
+                    product_dict['product_short_desc'] = ('\n').join([item.text for item in product_short_desc])
+                except:
+                    product_dict['product_short_desc'] = ''
                     
                 # Get product availability
                 try:
                     product_current_unavailable = product_tile.find_elements(By.CSS_SELECTOR, 'div.coles-targeting-ProductTileCurrentlyUnavailableMessage')
-                    product_dict['product_current_unavailable'] = (' ').join([item.text for item in product_current_unavailable])
+                    product_dict['product_current_unavailable'] = ('\n').join([item.text for item in product_current_unavailable])
                 except:
                     product_dict['product_current_unavailable'] = ''
                     
                 product_count += 1
                 products.append(product_dict)
-
+                
+            print("product_count: ", product_count)
+            
         # if index > 1:
         #     break
 
@@ -286,7 +309,7 @@ def load_data(*args, **kwargs):
         scrape_data(driver, start_run_time, sub_coles_cat_l3)
 
 
-    return ''
+    return 'DONE!!!'
 
 
 @test
