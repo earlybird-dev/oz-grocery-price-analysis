@@ -247,6 +247,14 @@ def load_data(*args, **kwargs):
 
     service = Service()
     options = webdriver.ChromeOptions()
+    # This blocks images and javascript requests
+    chrome_prefs = {
+        "profile.default_content_setting_values": {
+            "images": 2,
+            "javascript": 2,
+        }
+    }
+    options.experimental_options["prefs"] = chrome_prefs
     options.add_argument('--headless=new')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')

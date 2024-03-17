@@ -56,4 +56,5 @@ help_improve_mage: true
 features:
   add_new_block_v2: true
   command_center: true
+  display_local_timezone: true
 pipelines:
