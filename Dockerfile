@@ -6,7 +6,7 @@ ARG USER_CODE_PATH=/home/src
 # Note: this overwrites the requirements.txt file in your new project on first run. 
 # You can delete this line for the second run :) 
 COPY requirements.txt ${USER_CODE_PATH}/requirements.txt 
-COPY grocery-price-analysis-d0419829e9b5.json ${USER_CODE_PATH}/grocery-price-analysis-d0419829e9b5.json
+COPY gcp.json ${USER_CODE_PATH}/gcp.json
 COPY . ${USER_CODE_PATH}
 
 RUN pip install -r ${USER_CODE_PATH}/requirements.txt

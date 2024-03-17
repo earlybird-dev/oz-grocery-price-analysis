@@ -37,7 +37,7 @@ default:
   DUCKDB_DATABASE: database
   DUCKDB_SCHEMA: main
   # Google
-  GOOGLE_SERVICE_ACC_KEY_FILEPATH: "/home/src/grocery-price-analysis-d0419829e9b5.json"
+  GOOGLE_SERVICE_ACC_KEY_FILEPATH: "/home/src/gcp.json"
   GOOGLE_LOCATION: australia-southeast2 # Optional
   # MongoDB
   # Specify either the connection string or the (host, password, user, port) to connect to MongoDB.
