@@ -27,7 +27,7 @@ def load_woolies_cat_l2_from_big_query():
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
 
-    query = 'SELECT * FROM grocery-price-analysis.raw_data.woolies_cat_l2 WHERE newly_added = 1'
+    query = 'SELECT * FROM grocery-price-analysis.scraping_data.woolies_cat_l2 WHERE newly_added = 1'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
     try:
@@ -42,7 +42,7 @@ def load_woolies_cat_l3_from_big_query():
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
 
-    query = 'SELECT * FROM grocery-price-analysis.raw_data.woolies_cat_l3'
+    query = 'SELECT * FROM grocery-price-analysis.scraping_data.woolies_cat_l3'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
     try:

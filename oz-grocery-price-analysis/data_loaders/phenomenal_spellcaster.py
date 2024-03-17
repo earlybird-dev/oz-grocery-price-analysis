@@ -32,7 +32,7 @@ def load_data_from_big_query():
 
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
-    query = 'SELECT * FROM grocery-price-analysis.raw_data.woolies_cat_l3'
+    query = 'SELECT * FROM grocery-price-analysis.scraping_data.woolies_cat_l3'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
     
@@ -47,7 +47,7 @@ def export_data_to_big_query(df):
 
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
-    table_id = 'grocery-price-analysis.raw_data.woolies_products'
+    table_id = 'grocery-price-analysis.scraping_data.woolies_products'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
 

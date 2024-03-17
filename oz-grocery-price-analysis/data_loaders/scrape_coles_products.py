@@ -28,7 +28,7 @@ def load_data_from_big_query():
 
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
-    query = 'SELECT * FROM grocery-price-analysis.raw_data.coles_cat_l3'
+    query = 'SELECT * FROM grocery-price-analysis.scraping_data.coles_cat_l3'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
     
