@@ -58,40 +58,54 @@ def get_new_coles_cat_l2(driver, coles_cat_l1):
     SLEEP_TIME = 3
     now = datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S')
 
-    CSS_SELECTOR = 'a.coles-targeting-NavLinkLink'
     categories = []
 
     for index, cat_l1 in coles_cat_l1.iterrows():
-
-        print()
-        print(f'INDEX---------------------------------: {index}')
-
-        cat_l1_id = cat_l1['cat_l1_id']
-        cat_l1_link = cat_l1['cat_l1_link']
-
-        driver.get(cat_l1_link)
-        time.sleep(SLEEP_TIME)
-
-        category_items = driver.find_elements(By.CSS_SELECTOR, CSS_SELECTOR)
         
-        for item in category_items:
-            cat_dict = {}
+        stop_condition = False
+        attempts = 0
+        
+        while not stop_condition:
 
-            cat_dict['updated_at'] = now
-            cat_dict['newly_added'] = 1
+            attempts += 1
+            if attempts > 2:
+                stop_condition = True
 
-            cat_dict['cat_l1_id'] = cat_l1_id
+            print()
+            print(f'INDEX------------------: {index} - ATTEMPT------------------: {attempts}')
 
-            cat_dict['cat_l2_name'] = item.find_element(By.CSS_SELECTOR, 'span.coles-targeting-NavLinkLabel').text.strip()
-            cat_dict['cat_l2_link'] = item.get_attribute('href')
-
-            cat_link_split = cat_dict['cat_l2_link'].split('/')
-            cat_link_split = [i for i in cat_link_split if i != '']
-            cat_dict['cat_l2_id'] = cat_link_split[-1]
+            cat_l1_id = cat_l1['cat_l1_id']
+            cat_l1_link = cat_l1['cat_l1_link']
             
-            if (cat_l1_id in cat_dict['cat_l2_link']) & (cat_l1_id != cat_dict['cat_l2_id']):
-                if 'tobacco' not in cat_dict['cat_l2_id']:
-                    categories.append(cat_dict)
+            if attempts > 1:
+                print(cat_l1_link)
+
+            driver.get(cat_l1_link)
+            time.sleep(SLEEP_TIME)
+
+            category_items = driver.find_elements(By.CSS_SELECTOR, 'a.coles-targeting-NavLinkLink')
+            
+            if len(category_items) > 0:
+                stop_condition = True
+
+                for item in category_items:
+                    cat_dict = {}
+
+                    cat_dict['updated_at'] = now
+                    cat_dict['newly_added'] = 1
+
+                    cat_dict['cat_l1_id'] = cat_l1_id
+
+                    cat_dict['cat_l2_name'] = item.find_element(By.CSS_SELECTOR, 'span.coles-targeting-NavLinkLabel').text.strip()
+                    cat_dict['cat_l2_link'] = item.get_attribute('href')
+
+                    cat_link_split = cat_dict['cat_l2_link'].split('/')
+                    cat_link_split = [i for i in cat_link_split if i != '']
+                    cat_dict['cat_l2_id'] = cat_link_split[-1]
+                    
+                    if (cat_l1_id in cat_dict['cat_l2_link']) & (cat_l1_id != cat_dict['cat_l2_id']):
+                        if 'tobacco' not in cat_dict['cat_l2_id']:
+                            categories.append(cat_dict)
 
     categories = pd.DataFrame(categories)
     categories = categories[['updated_at', 'newly_added', 'cat_l1_id', 'cat_l2_id', 'cat_l2_name', 'cat_l2_link']]

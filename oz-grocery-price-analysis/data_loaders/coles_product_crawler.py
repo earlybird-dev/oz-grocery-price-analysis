@@ -20,27 +20,16 @@ if 'data_loader' not in globals():
 if 'test' not in globals():
     from mage_ai.data_preparation.decorators import test
 
+
 TZ = pytz.timezone('Australia/Sydney') 
 
 
-def get_shadow_root(driver, element):
-    return driver.execute_script('return arguments[0].shadowRoot', element)
-
-
-def load_woolies_cat_l3_from_big_query():
+def load_coles_cat_l3_from_big_query():
     """
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
 
-    query = """
-        SELECT
-            *
-        FROM
-            grocery-price-analysis.scraping_data.woolies_cat_l3
-        WHERE
-            newly_added = 1
-            AND cat_l3_link NOT LIKE "%everyday-market%"
-    """
+    query = 'SELECT * FROM grocery-price-analysis.scraping_data.coles_cat_l3 WHERE newly_added = 1'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
     
@@ -53,7 +42,7 @@ def export_product_data_to_big_query(df):
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
 
-    table_id = 'grocery-price-analysis.scraping_data.woolies_products'
+    table_id = 'grocery-price-analysis.scraping_data.coles_products'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
 
@@ -69,7 +58,7 @@ def export_fail_attempts_to_big_query(df):
     Docs: https://docs.mage.ai/design/data-loading#bigquery
     """
 
-    table_id = 'grocery-price-analysis.scraping_data.woolies_cat_l3_fail_attempts'
+    table_id = 'grocery-price-analysis.scraping_data.coles_cat_l3_fail_attempts'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'default'
 
@@ -80,19 +69,19 @@ def export_fail_attempts_to_big_query(df):
     )
 
 
-def scrape_data(driver, start_run_time, woolies_cat_l3):
+def scrape_data(driver, start_run_time, coles_cat_l3):
     """
     Scrape product data given a category
     """
 
+    SLEEP_TIME = 3
     now_time = datetime.datetime.now(TZ)
 
-    SLEEP_TIME = 3
     products = []
     fail_to_get_product_tiles = []
 
-    for index, cat_l3 in woolies_cat_l3.iterrows():
-
+    for index, cat_l3 in coles_cat_l3.iterrows():
+        
         print()
         print(f'INDEX---------------------------------: {index}')
 
@@ -107,7 +96,7 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
         time.sleep(SLEEP_TIME)
 
         # Get number of product pages
-        pagination_items = driver.find_elements(By.CSS_SELECTOR, 'a.paging-pageNumber')
+        pagination_items = driver.find_elements(By.CLASS_NAME, 'coles-targeting-PaginationPaginationItem')
         nums = [1]
         for item in pagination_items:
             page_number = item.text.strip()
@@ -121,29 +110,28 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
         # Scrape product data from each page
         for i in range(1, total_pages + 1):
 
-            # Find all the product tiles (shadow host)
+            page_url = f'{cat_l3_link}?page={i}'
+
             stop_condition = False
             attempts = 0
             
             while not stop_condition:
-                page_url = f'{cat_l3_link}?pageNumber={i}'
 
+                attempts += 1
+                if attempts > 2:
+                    stop_condition = True
+                    fail_to_get_product_tiles.append({'start_run_time': start_run_time, 'time': datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S'), 'cat_l3_link_page_num': page_url})
+                
                 driver.get(page_url)
                 time.sleep(SLEEP_TIME)
 
                 product_count = 0
-                product_tiles = driver.find_elements(By.TAG_NAME, 'wc-product-tile') # sometimes return null
-
-                attempts += 1
-                if attempts > 10:
-                    stop_condition = True
-                    fail_to_get_product_tiles.append({'start_run_time': start_run_time, 'time': datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S'), 'cat_l3_link_page_num': page_url})
+                product_tiles = driver.find_elements(By.CLASS_NAME, 'coles-targeting-ProductTileProductTileWrapper')
 
                 if len(product_tiles) > 0:
                     stop_condition = True
 
                     for product_tile in product_tiles:
-                        shadow_root = get_shadow_root(driver, product_tile)
 
                         product_dict = {}
 
@@ -156,98 +144,111 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
                         product_dict['cat_l3_link'] = cat_l3_link
                         product_dict['cat_l3_link_updated_at'] = cat_l3_link_updated_at
 
-                        # Get product link
+                        # Get product tile hat
                         try:
-                            product_tile_image = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-tile-image')
-                            product_link = product_tile_image.find_element(By.TAG_NAME, 'a')
-                            product_dict['product_link'] = product_link.get_attribute('href')
+                            product_tile_hat = product_tile.find_element(By.CLASS_NAME, 'coles-targeting-ProductTileHat')
+                            product_dict['product_tile_hat'] = product_tile_hat.text
                         except:
-                            product_dict['product_link'] = ''
-
-                        # Get image link
-                        try:
-                            product_tile_image = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-tile-image')
-                            product_img_link = product_tile_image.find_element(By.TAG_NAME, 'img')
-                            product_dict['product_img_link'] = product_img_link.get_attribute('src')
-                        except:
-                            product_dict['product_img_link'] = ''
+                            product_dict['product_tile_hat'] = ''
                             
                         # Get product badge
                         try:
-                            product_badge = shadow_root.find_element(By.CSS_SELECTOR, 'img.product-tile-roundel-image')
-                            product_dict['product_badge'] = product_badge.get_attribute('alt')
+                            product_badge = product_tile.find_element(By.CSS_SELECTOR, 'span.product__badge')
+                            product_dict['product_badge'] = product_badge.text
                         except:
                             product_dict['product_badge'] = ''
                             
+                        # Get product top messaging
+                        try:
+                            product_top_messaging = product_tile.find_elements(By.CSS_SELECTOR, 'li.product__top_messaging__item')
+                            product_dict['product_top_messaging'] = ('\n').join([item.text for item in product_top_messaging])
+                        except:
+                            product_dict['product_top_messaging'] = ''
+                            
+                        # Get product link
+                        try:
+                            product_link = product_tile.find_element(By.CSS_SELECTOR, 'a.product__link')
+                            product_dict['product_link'] = product_link.get_attribute('href')
+                            
+                        except:
+                            product_dict['product_link'] = ''
+
+                        # Get product img
+                        try:
+                            product_img = product_tile.find_element(By.CSS_SELECTOR, 'a.product__image')                    
+                            product_img_link = product_img.find_element(By.TAG_NAME, 'img')
+                            product_dict['product_img_link'] = product_img_link.get_attribute('src')
+
+                        except:
+                            product_dict['product_img_link'] = ''
+                            
                         # Get product name
                         try:
-                            product_name = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-title-container .title')
+                            product_name = product_tile.find_element(By.CSS_SELECTOR, 'h2.product__title')
                             product_dict['product_name'] = product_name.text
                         except:
                             product_dict['product_name'] = ''
                             
                         # Get product price
                         try:
-                            product_price = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-tile-price .primary')
-                            product_dict['product_price'] = product_price.text
+                            product_price = product_tile.find_elements(By.CSS_SELECTOR, 'span.price__value')
+                            product_dict['product_price'] = ('\n').join([item.text for item in product_price])
                         except:
                             product_dict['product_price'] = ''  
 
                         # Get product price was
                         try:
-                            product_price_was = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-tile-price .secondary .was-price')
-                            product_dict['product_price_was'] = product_price_was.text
+                            product_price_was = product_tile.find_elements(By.CSS_SELECTOR, 'span.price__was')
+                            product_dict['product_price_was'] = ('\n').join([item.text for item in product_price_was])
                         except:
                             product_dict['product_price_was'] = ''
                             
                         # Get product badge label
                         try:
-                            product_badge_label = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-tile-v2--labels')
-                            product_dict['product_badge_label'] = product_badge_label.text
+                            product_badge_label = product_tile.find_elements(By.CSS_SELECTOR, 'section.badge-label')
+                            product_dict['product_badge_label'] = ('\n').join([item.text for item in product_badge_label])
                         except:
                             product_dict['product_badge_label'] = ''
                             
                         # Get product price calculation method
                         try:
-                            product_price_calc_method = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-tile-price .secondary .price-per-cup')
-                            product_dict['product_price_calc_method'] = product_price_calc_method.text
+                            product_price_calc_method = product_tile.find_elements(By.CSS_SELECTOR, 'div.price__calculation_method')
+                            product_dict['product_price_calc_method'] = ('\n').join([item.text for item in product_price_calc_method])
                         except:
                             product_dict['product_price_calc_method'] = ''
                             
                         # Get product price calculation method desc
                         try:
-                            product_title_promo_info = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-tile-promo-info')
-                            product_dict['product_title_promo_info'] = product_title_promo_info.text
+                            product_price_calc_method_desc = product_tile.find_elements(By.CSS_SELECTOR, 'span.price__calculation_method__description')
+                            product_dict['product_price_calc_method_desc'] = ('\n').join([item.text for item in product_price_calc_method_desc])
                         except:
-                            product_dict['product_title_promo_info'] = ''
+                            product_dict['product_price_calc_method_desc'] = ''
+                            
+                        # Get product promotion
+                        try:
+                            product_promotion = product_tile.find_elements(By.CSS_SELECTOR, 'span.product_promotion')
+                            product_dict['product_promotion'] = ('\n').join([item.text for item in product_promotion])
+                        except:
+                            product_dict['product_promotion'] = ''
+                            
+                        # Get product short desc
+                        try:
+                            product_short_desc = product_tile.find_elements(By.CSS_SELECTOR, 'span.product__short_description')
+                            product_dict['product_short_desc'] = ('\n').join([item.text for item in product_short_desc])
+                        except:
+                            product_dict['product_short_desc'] = ''
                             
                         # Get product availability
                         try:
-                            product_current_unavailable = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-tile-unavailable-tag')
-                            product_dict['product_current_unavailable'] = product_current_unavailable.text
+                            product_current_unavailable = product_tile.find_elements(By.CSS_SELECTOR, 'div.coles-targeting-ProductTileCurrentlyUnavailableMessage')
+                            product_dict['product_current_unavailable'] = ('\n').join([item.text for item in product_current_unavailable])
                         except:
                             product_dict['product_current_unavailable'] = ''
-
-                        # Get product sponsor text
-                        try:
-                            product_sponsor = shadow_root.find_element(By.CSS_SELECTOR, 'div.product-title-container .sponsored-text')
-                            product_sponsor_text = product_sponsor.text
-                            product_dict['product_sponsor'] = product_sponsor_text
-                        except:
-                            product_dict['product_sponsor'] = ''
-                        
-                        # Get product sold by
-                        try:
-                            product_sold_by = shadow_root.find_element(By.CSS_SELECTOR, 'div.shelfProductTile-vendor-information')
-                            product_sold_by_text = product_sold_by.text
-                            product_dict['product_sold_by'] = product_sold_by_text
-                        except:
-                            product_dict['product_sold_by'] = ''
-
+                            
                         product_count += 1
                         products.append(product_dict)
                         
-                    print("product_count: ", product_count)
+                    print(f'product_count: {product_count} - page: {i}')
 
         # if index > 1:
         #     break
@@ -259,7 +260,7 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
         print(f'RUNNING TIME: {datetime.datetime.now(TZ)-now_time}')
         print()
         export_product_data_to_big_query(product_df)
-    
+
     if len(fail_to_get_product_tiles) > 0:
         fail_to_get_product_tiles_df = pd.DataFrame(fail_to_get_product_tiles)
         export_fail_attempts_to_big_query(fail_to_get_product_tiles_df)
@@ -290,11 +291,11 @@ def load_data(*args, **kwargs):
 
     start_run_time = datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S')
 
-    # Retieve woolies level 3 categories
-    woolies_cat_l3 = load_woolies_cat_l3_from_big_query()
+    # Retieve coles level 3 categories
+    coles_cat_l3 = load_coles_cat_l3_from_big_query()
 
     # Scrape products data
-    number_of_categories = len(woolies_cat_l3)
+    number_of_categories = len(coles_cat_l3)
     bin_size = 10
     number_of_bin = math.ceil(number_of_categories / bin_size)
 
@@ -304,11 +305,11 @@ def load_data(*args, **kwargs):
         print()
         print(f'i: {i}, start_index: {start_index}, end_index: {end_index-1}')
         print()
+        
+        sub_coles_cat_l3 = coles_cat_l3.iloc[start_index:end_index]
+        scrape_data(driver, start_run_time, sub_coles_cat_l3)
 
-        sub_woolies_cat_l3 = woolies_cat_l3.iloc[start_index:end_index]
-        scrape_data(driver, start_run_time, sub_woolies_cat_l3)
 
-    print()
     return 'DONE!!!'
 
 
@@ -317,5 +318,5 @@ def test_output(output, *args) -> None:
     """
     Template code for testing the output of the block.
     """
-    
+
     assert output is not None, 'The output is undefined'

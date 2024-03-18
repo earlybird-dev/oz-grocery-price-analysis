@@ -59,44 +59,60 @@ def get_new_woolies_cat_l2(driver, woolies_cat_l1):
 
     SLEEP_TIME = 3
     now = datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S')
+
     categories = []
 
     for index, cat_l1 in woolies_cat_l1.iterrows():
         
-        print()
-        print(f'INDEX---------------------------------: {index}')
-
-        cat_l1_id = cat_l1['cat_l1_id']
-        cat_l1_link = cat_l1['cat_l1_link']
-
-        driver.get(cat_l1_link)
-        time.sleep(SLEEP_TIME)
-
-        category_items = []
-        try:
-            browse_menu = driver.find_element(By.CLASS_NAME, 'chip-list')
-            category_items = browse_menu.find_elements(By.CSS_SELECTOR, 'a.chip')
-        except:
-            pass
+        stop_condition = False
+        attempts = 0
         
-        for item in category_items:
-            cat_dict = {}
-
-            cat_dict['updated_at'] = now
-            cat_dict['newly_added'] = 1
-
-            cat_dict['cat_l1_id'] = cat_l1_id
-
-            cat_dict['cat_l2_name'] = item.find_element(By.CSS_SELECTOR, 'span.chip-text').text.strip()
-            cat_dict['cat_l2_link'] = item.get_attribute('href')
-
-            cat_link_split = cat_dict['cat_l2_link'].split('/')
-            cat_link_split = [i for i in cat_link_split if i != '']
-            cat_dict['cat_l2_id'] = cat_link_split[-1]
+        while not stop_condition:
             
-            if (cat_l1_id in cat_dict['cat_l2_link']) & (cat_l1_id != cat_dict['cat_l2_id']):
-                if 'tobacco' not in cat_dict['cat_l2_id']:
-                    categories.append(cat_dict)
+            attempts += 1
+            if attempts > 2:
+                stop_condition = True
+
+            print()
+            print(f'INDEX------------------: {index} - ATTEMPT------------------: {attempts}')
+
+            cat_l1_id = cat_l1['cat_l1_id']
+            cat_l1_link = cat_l1['cat_l1_link']
+            
+            if attempts > 1:
+                print(cat_l1_link)
+
+            driver.get(cat_l1_link)
+            time.sleep(SLEEP_TIME)
+
+            category_items = []
+            try:
+                browse_menu = driver.find_element(By.CLASS_NAME, 'chip-list')
+                category_items = browse_menu.find_elements(By.CSS_SELECTOR, 'a.chip')
+            except:
+                pass
+            
+            if len(category_items) > 0:
+                stop_condition = True
+
+                for item in category_items:
+                    cat_dict = {}
+
+                    cat_dict['updated_at'] = now
+                    cat_dict['newly_added'] = 1
+
+                    cat_dict['cat_l1_id'] = cat_l1_id
+
+                    cat_dict['cat_l2_name'] = item.find_element(By.CSS_SELECTOR, 'span.chip-text').text.strip()
+                    cat_dict['cat_l2_link'] = item.get_attribute('href')
+
+                    cat_link_split = cat_dict['cat_l2_link'].split('/')
+                    cat_link_split = [i for i in cat_link_split if i != '']
+                    cat_dict['cat_l2_id'] = cat_link_split[-1]
+                    
+                    if (cat_l1_id in cat_dict['cat_l2_link']) & (cat_l1_id != cat_dict['cat_l2_id']):
+                        if 'tobacco' not in cat_dict['cat_l2_id']:
+                            categories.append(cat_dict)
 
     categories = pd.DataFrame(categories)
     categories = categories[['updated_at', 'newly_added', 'cat_l1_id', 'cat_l2_id', 'cat_l2_name', 'cat_l2_link']]

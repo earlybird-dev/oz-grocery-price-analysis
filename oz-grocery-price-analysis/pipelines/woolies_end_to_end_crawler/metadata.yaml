@@ -86,7 +86,8 @@ blocks:
 - all_upstream_blocks_executed: false
   color: null
   configuration: {}
-  downstream_blocks: []
+  downstream_blocks:
+  - woolies_product_crawler
   executor_config: null
   executor_type: local_python
   has_callback: false
@@ -99,6 +100,46 @@ blocks:
   upstream_blocks:
   - get_woolies_cat_l3
   uuid: woolies_cat_l3_to_bigquery
+- all_upstream_blocks_executed: false
+  color: null
+  configuration:
+    dynamic: false
+    file_path: /home/src/oz-grocery-price-analysis/data_loaders/woolies_product_crawler.py
+    file_source:
+      path: data_loaders/woolies_product_crawler.py
+  downstream_blocks:
+  - woolies_product_backfill
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: woolies_product_crawler
+  retry_config: null
+  status: updated
+  timeout: null
+  type: data_loader
+  upstream_blocks:
+  - woolies_cat_l3_to_bigquery
+  uuid: woolies_product_crawler
+- all_upstream_blocks_executed: false
+  color: null
+  configuration:
+    file_path: data_loaders/woolies_product_backfill.py
+    file_source:
+      path: data_loaders/woolies_product_backfill.py
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: woolies_product_backfill
+  retry_config: null
+  status: updated
+  timeout: null
+  type: data_loader
+  upstream_blocks:
+  - woolies_product_crawler
+  uuid: woolies_product_backfill
 cache_block_output_in_memory: false
 callbacks: []
 concurrency_config: {}
@@ -110,7 +151,7 @@ executor_config: {}
 executor_count: 1
 executor_type: null
 extensions: {}
-name: category_crawler_woolies
+name: woolies_end_to_end_crawler
 notification_config: {}
 remote_variables_dir: null
 retry_config: {}
@@ -120,6 +161,6 @@ settings:
 spark_config: {}
 tags: []
 type: python
-uuid: category_crawler_woolies
+uuid: woolies_end_to_end_crawler
 variables_dir: /home/src/mage_data/oz-grocery-price-analysis
 widgets: []
