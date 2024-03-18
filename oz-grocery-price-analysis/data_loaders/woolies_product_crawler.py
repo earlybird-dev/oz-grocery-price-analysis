@@ -85,9 +85,9 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
     Scrape product data given a category
     """
 
+    SLEEP_TIME = 3
     now_time = datetime.datetime.now(TZ)
 
-    SLEEP_TIME = 3
     products = []
     fail_to_get_product_tiles = []
 
@@ -120,24 +120,24 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
 
         # Scrape product data from each page
         for i in range(1, total_pages + 1):
+            
+            page_url = f'{cat_l3_link}?pageNumber={i}'
 
-            # Find all the product tiles (shadow host)
             stop_condition = False
             attempts = 0
             
             while not stop_condition:
-                page_url = f'{cat_l3_link}?pageNumber={i}'
+
+                attempts += 1
+                if attempts > 2:
+                    stop_condition = True
+                    fail_to_get_product_tiles.append({'start_run_time': start_run_time, 'time': datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S'), 'cat_l3_link_page_num': page_url})
 
                 driver.get(page_url)
                 time.sleep(SLEEP_TIME)
 
                 product_count = 0
                 product_tiles = driver.find_elements(By.TAG_NAME, 'wc-product-tile') # sometimes return null
-
-                attempts += 1
-                if attempts > 10:
-                    stop_condition = True
-                    fail_to_get_product_tiles.append({'start_run_time': start_run_time, 'time': datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S'), 'cat_l3_link_page_num': page_url})
 
                 if len(product_tiles) > 0:
                     stop_condition = True
@@ -247,7 +247,7 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
                         product_count += 1
                         products.append(product_dict)
                         
-                    print("product_count: ", product_count)
+                    print(f'product_count: {product_count} - page: {i}')
 
         # if index > 1:
         #     break

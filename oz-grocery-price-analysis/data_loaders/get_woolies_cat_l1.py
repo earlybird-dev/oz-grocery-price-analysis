@@ -45,39 +45,52 @@ def get_new_woolies_cat_l1(driver):
     SLEEP_TIME = 3
     now = datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S')
     
-    url = f'https://www.woolworths.com.au/'
-    driver.get(url)
-    time.sleep(SLEEP_TIME)
-
-    browse_buttons = driver.find_elements(By.CSS_SELECTOR, 'button.wx-header__drawer-button')
-    for button in browse_buttons:
-        if 'Browse' in button.text:
-            browse_button = button
-            print('found browse button', button.text)
-            browse_button.click()
-            break
-    print('clicked')
-    time.sleep(SLEEP_TIME)
-
-    browse_menu = driver.find_element(By.CLASS_NAME, 'category-list')
-    browse_menu_items = browse_menu.find_elements(By.CSS_SELECTOR, 'a.ng-star-inserted')
-
     categories = []
-    for item in browse_menu_items:
-        cat_dict = {}
 
-        cat_dict['updated_at'] = now
-        cat_dict['newly_added'] = 1
+    stop_condition = False
+    attempts = 0
+    
+    while not stop_condition:
 
-        cat_dict['cat_l1_name'] = item.text.strip()
-        cat_dict['cat_l1_link'] = item.get_attribute('href')
+        attempts += 1
+        if attempts > 2:
+            stop_condition = True
 
-        cat_link_split = cat_dict['cat_l1_link'].split('/')
-        cat_link_split = [i for i in cat_link_split if i != '']
-        cat_dict['cat_l1_id'] = cat_link_split[-1]
-        
-        if 'tobacco' not in cat_dict['cat_l1_id']:
-            categories.append(cat_dict)
+        url = f'https://www.woolworths.com.au/'
+        driver.get(url)
+        time.sleep(SLEEP_TIME)
+
+        browse_buttons = driver.find_elements(By.CSS_SELECTOR, 'button.wx-header__drawer-button')
+        for button in browse_buttons:
+            if 'Browse' in button.text:
+                browse_button = button
+                print('found browse button', button.text)
+                browse_button.click()
+                break
+        print('clicked')
+        time.sleep(SLEEP_TIME)
+
+        browse_menu = driver.find_element(By.CLASS_NAME, 'category-list')
+        browse_menu_items = browse_menu.find_elements(By.CSS_SELECTOR, 'a.ng-star-inserted')
+
+        if len(browse_menu_items) > 0:
+            stop_condition = True
+
+            for item in browse_menu_items:
+                cat_dict = {}
+
+                cat_dict['updated_at'] = now
+                cat_dict['newly_added'] = 1
+
+                cat_dict['cat_l1_name'] = item.text.strip()
+                cat_dict['cat_l1_link'] = item.get_attribute('href')
+
+                cat_link_split = cat_dict['cat_l1_link'].split('/')
+                cat_link_split = [i for i in cat_link_split if i != '']
+                cat_dict['cat_l1_id'] = cat_link_split[-1]
+                
+                if 'tobacco' not in cat_dict['cat_l1_id']:
+                    categories.append(cat_dict)
 
     categories = pd.DataFrame(categories)
     categories = categories[['updated_at', 'newly_added', 'cat_l1_id', 'cat_l1_name', 'cat_l1_link']]
