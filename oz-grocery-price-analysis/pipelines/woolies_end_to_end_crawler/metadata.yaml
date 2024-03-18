@@ -115,7 +115,7 @@ blocks:
   language: python
   name: woolies_product_crawler
   retry_config: null
-  status: not_executed
+  status: updated
   timeout: null
   type: data_loader
   upstream_blocks:
@@ -134,7 +134,7 @@ blocks:
   language: python
   name: woolies_product_backfill
   retry_config: null
-  status: not_executed
+  status: updated
   timeout: null
   type: data_loader
   upstream_blocks:

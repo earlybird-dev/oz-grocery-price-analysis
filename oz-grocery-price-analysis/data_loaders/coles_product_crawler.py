@@ -53,6 +53,22 @@ def export_product_data_to_big_query(df):
     )
 
 
+def export_fail_attempts_to_big_query(df):
+    """
+    Docs: https://docs.mage.ai/design/data-loading#bigquery
+    """
+
+    table_id = 'grocery-price-analysis.scraping_data.coles_cat_l3_fail_attempts'
+    config_path = path.join(get_repo_path(), 'io_config.yaml')
+    config_profile = 'default'
+
+    BigQuery.with_config(ConfigFileLoader(config_path, config_profile)).export(
+        df,
+        table_id,
+        if_exists='append',  # Specify resolution policy if table name already exists
+    )
+
+
 def scrape_data(driver, start_run_time, coles_cat_l3):
     """
     Scrape product data given a category
@@ -62,6 +78,7 @@ def scrape_data(driver, start_run_time, coles_cat_l3):
     now_time = datetime.datetime.now(TZ)
 
     products = []
+    fail_to_get_product_tiles = []
 
     for index, cat_l3 in coles_cat_l3.iterrows():
         
@@ -93,21 +110,22 @@ def scrape_data(driver, start_run_time, coles_cat_l3):
         # Scrape product data from each page
         for i in range(1, total_pages + 1):
 
+            page_url = f'{cat_l3_link}?page={i}'
+
             stop_condition = False
             attempts = 0
             
             while not stop_condition:
+
                 attempts += 1
                 if attempts > 2:
                     stop_condition = True
-
-                page_url = f'{cat_l3_link}?page={i}'
+                    fail_to_get_product_tiles.append({'start_run_time': start_run_time, 'time': datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S'), 'cat_l3_link_page_num': page_url})
+                
                 driver.get(page_url)
                 time.sleep(SLEEP_TIME)
 
                 product_count = 0
-
-                # Find all the product tiles
                 product_tiles = driver.find_elements(By.CLASS_NAME, 'coles-targeting-ProductTileProductTileWrapper')
 
                 if len(product_tiles) > 0:
@@ -242,6 +260,10 @@ def scrape_data(driver, start_run_time, coles_cat_l3):
         print(f'RUNNING TIME: {datetime.datetime.now(TZ)-now_time}')
         print()
         export_product_data_to_big_query(product_df)
+
+    if len(fail_to_get_product_tiles) > 0:
+        fail_to_get_product_tiles_df = pd.DataFrame(fail_to_get_product_tiles)
+        export_fail_attempts_to_big_query(fail_to_get_product_tiles_df)
 
 
 @data_loader   

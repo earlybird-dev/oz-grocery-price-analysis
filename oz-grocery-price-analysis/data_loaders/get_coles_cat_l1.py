@@ -51,14 +51,14 @@ def get_new_coles_cat_l1(driver):
     attempts = 0
     
     while not stop_condition:
-        
-        url = f'https://www.coles.com.au/browse/'
-        driver.get(url)
-        time.sleep(SLEEP_TIME)
 
         attempts += 1
         if attempts > 2:
             stop_condition = True
+        
+        url = f'https://www.coles.com.au/browse/'
+        driver.get(url)
+        time.sleep(SLEEP_TIME)
 
         category_items = driver.find_elements(By.CSS_SELECTOR, 'a.coles-targeting-ShopCategoriesShopCategoryStyledCategoryContainer')
 

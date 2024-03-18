@@ -68,6 +68,7 @@ def get_new_coles_cat_l3(driver, coles_cat_l2):
         attempts = 0
         
         while not stop_condition:
+
             attempts += 1
             if attempts > 2:
                 stop_condition = True
@@ -83,6 +84,7 @@ def get_new_coles_cat_l3(driver, coles_cat_l2):
             time.sleep(SLEEP_TIME)
 
             category_items = driver.find_elements(By.CSS_SELECTOR, 'a.coles-targeting-NavLinkLink')
+            
             if len(category_items) > 0:
                 stop_condition = True
 
