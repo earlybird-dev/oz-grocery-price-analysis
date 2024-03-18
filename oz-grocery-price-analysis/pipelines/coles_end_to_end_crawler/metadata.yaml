@@ -103,25 +103,6 @@ blocks:
 - all_upstream_blocks_executed: false
   color: null
   configuration:
-    file_path: data_loaders/coles_product_backfill.py
-    file_source:
-      path: data_loaders/coles_product_backfill.py
-  downstream_blocks: []
-  executor_config: null
-  executor_type: local_python
-  has_callback: false
-  language: python
-  name: coles_product_backfill
-  retry_config: null
-  status: not_executed
-  timeout: null
-  type: data_loader
-  upstream_blocks:
-  - coles_product_crawler
-  uuid: coles_product_backfill
-- all_upstream_blocks_executed: false
-  color: null
-  configuration:
     file_path: /home/src/oz-grocery-price-analysis/data_loaders/coles_product_crawler.py
     file_source:
       path: data_loaders/coles_product_crawler.py
@@ -133,12 +114,31 @@ blocks:
   language: python
   name: coles_product_crawler
   retry_config: null
-  status: not_executed
+  status: updated
   timeout: null
   type: data_loader
   upstream_blocks:
   - coles_cat_l3_to_bigquery
   uuid: coles_product_crawler
+- all_upstream_blocks_executed: false
+  color: null
+  configuration:
+    file_path: data_loaders/coles_product_backfill.py
+    file_source:
+      path: data_loaders/coles_product_backfill.py
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: coles_product_backfill
+  retry_config: null
+  status: updated
+  timeout: null
+  type: data_loader
+  upstream_blocks:
+  - coles_product_crawler
+  uuid: coles_product_backfill
 cache_block_output_in_memory: false
 callbacks: []
 concurrency_config: {}
