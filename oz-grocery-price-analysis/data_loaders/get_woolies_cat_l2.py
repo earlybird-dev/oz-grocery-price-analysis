@@ -78,6 +78,9 @@ def get_new_woolies_cat_l2(driver, woolies_cat_l1):
 
             cat_l1_id = cat_l1['cat_l1_id']
             cat_l1_link = cat_l1['cat_l1_link']
+            
+            if attempts > 1:
+                print(cat_l1_link)
 
             driver.get(cat_l1_link)
             time.sleep(SLEEP_TIME)

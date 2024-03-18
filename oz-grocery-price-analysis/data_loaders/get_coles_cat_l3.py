@@ -79,6 +79,9 @@ def get_new_coles_cat_l3(driver, coles_cat_l2):
             cat_l1_id = cat_l2['cat_l1_id']
             cat_l2_id = cat_l2['cat_l2_id']
             cat_l2_link = cat_l2['cat_l2_link']
+            
+            if attempts > 1:
+                print(cat_l2_link)
 
             driver.get(cat_l2_link)
             time.sleep(SLEEP_TIME)
