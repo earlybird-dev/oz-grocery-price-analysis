@@ -1,0 +1,12 @@
+triggers:
+- envs: []
+  last_enabled_at: 2024-03-18 08:23:00.916524
+  name: Daily Run @ 0am
+  pipeline_uuid: woolies_end_to_end_crawler
+  schedule_interval: 0 13 * * *
+  schedule_type: time
+  settings: null
+  sla: null
+  start_time: 2024-03-18 08:22:00
+  status: inactive
+  variables: {}
