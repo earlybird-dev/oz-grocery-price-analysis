@@ -55,7 +55,7 @@ def load_coles_cat_l2_from_big_query():
 def get_new_coles_cat_l2(driver, coles_cat_l1):
     """Scrape main category data"""
 
-    SLEEP_TIME = 3
+    SLEEP_TIME = 10
     now = datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S')
 
     categories = []

@@ -57,7 +57,7 @@ def get_new_woolies_cat_l2(driver, woolies_cat_l1):
     Scrape main category data
     """
 
-    SLEEP_TIME = 3
+    SLEEP_TIME = 10
     now = datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S')
 
     categories = []
