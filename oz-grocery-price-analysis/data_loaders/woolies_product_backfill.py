@@ -336,6 +336,11 @@ def load_data(*args, **kwargs):
         scrape_data(driver, start_run_time, sub_woolies_cat_l3)
 
     print()
+    
+    print('driver.quit')
+    driver.quit()
+    print()
+
     return 'DONE!!!'
 
 

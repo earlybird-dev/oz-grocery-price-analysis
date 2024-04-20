@@ -165,6 +165,10 @@ def load_data(*args, **kwargs):
     print(woolies_cat_l3)
     print()
 
+    print('driver.quit')
+    driver.quit()
+    print()
+
     return woolies_cat_l3
 
 

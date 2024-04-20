@@ -126,6 +126,10 @@ def load_data(*args, **kwargs):
     print(coles_cat_l1)
     print()
 
+    print('driver.quit')
+    driver.quit()
+    print()
+
     return coles_cat_l1
 
 

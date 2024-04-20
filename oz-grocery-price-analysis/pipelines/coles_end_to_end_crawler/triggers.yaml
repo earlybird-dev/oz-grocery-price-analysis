@@ -3,7 +3,7 @@ triggers:
   last_enabled_at: 2024-03-18 08:22:35.270611
   name: Daily Run @ 1am
   pipeline_uuid: coles_end_to_end_crawler
-  schedule_interval: 0 14 * * *
+  schedule_interval: 0 15 * * *
   schedule_type: time
   settings: null
   sla: null

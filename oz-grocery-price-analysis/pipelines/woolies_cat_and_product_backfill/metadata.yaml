@@ -1,0 +1,145 @@
+blocks:
+- all_upstream_blocks_executed: true
+  color: null
+  configuration: {}
+  downstream_blocks:
+  - woolies_cat_l1_to_bigquery
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: get_woolies_cat_l1
+  retry_config: null
+  status: updated
+  timeout: null
+  type: data_loader
+  upstream_blocks: []
+  uuid: get_woolies_cat_l1
+- all_upstream_blocks_executed: false
+  color: null
+  configuration: {}
+  downstream_blocks:
+  - get_woolies_cat_l2
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: woolies_cat_l1_to_bigquery
+  retry_config: null
+  status: executed
+  timeout: null
+  type: data_exporter
+  upstream_blocks:
+  - get_woolies_cat_l1
+  uuid: woolies_cat_l1_to_bigquery
+- all_upstream_blocks_executed: false
+  color: null
+  configuration: {}
+  downstream_blocks:
+  - woolies_cat_l2_to_bigquery
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: get_woolies_cat_l2
+  retry_config: null
+  status: updated
+  timeout: null
+  type: data_loader
+  upstream_blocks:
+  - woolies_cat_l1_to_bigquery
+  uuid: get_woolies_cat_l2
+- all_upstream_blocks_executed: false
+  color: null
+  configuration: {}
+  downstream_blocks:
+  - get_woolies_cat_l3
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: woolies_cat_l2_to_bigquery
+  retry_config: null
+  status: executed
+  timeout: null
+  type: data_exporter
+  upstream_blocks:
+  - get_woolies_cat_l2
+  uuid: woolies_cat_l2_to_bigquery
+- all_upstream_blocks_executed: false
+  color: null
+  configuration: {}
+  downstream_blocks:
+  - woolies_cat_l3_to_bigquery
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: get_woolies_cat_l3
+  retry_config: null
+  status: updated
+  timeout: null
+  type: data_loader
+  upstream_blocks:
+  - woolies_cat_l2_to_bigquery
+  uuid: get_woolies_cat_l3
+- all_upstream_blocks_executed: false
+  color: null
+  configuration: {}
+  downstream_blocks:
+  - woolies_product_backfill
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: woolies_cat_l3_to_bigquery
+  retry_config: null
+  status: executed
+  timeout: null
+  type: data_exporter
+  upstream_blocks:
+  - get_woolies_cat_l3
+  uuid: woolies_cat_l3_to_bigquery
+- all_upstream_blocks_executed: false
+  color: null
+  configuration:
+    file_path: data_loaders/woolies_product_backfill.py
+    file_source:
+      path: data_loaders/woolies_product_backfill.py
+  downstream_blocks: []
+  executor_config: null
+  executor_type: local_python
+  has_callback: false
+  language: python
+  name: woolies_product_backfill
+  retry_config: null
+  status: updated
+  timeout: null
+  type: data_loader
+  upstream_blocks:
+  - woolies_cat_l3_to_bigquery
+  uuid: woolies_product_backfill
+cache_block_output_in_memory: false
+callbacks: []
+concurrency_config: {}
+conditionals: []
+created_at: '2024-03-03 00:09:31.956260+00:00'
+data_integration: null
+description: null
+executor_config: {}
+executor_count: 1
+executor_type: null
+extensions: {}
+name: woolies_cat_and_product_backfill
+notification_config: {}
+remote_variables_dir: null
+retry_config: {}
+run_pipeline_in_one_process: false
+settings:
+  triggers: null
+spark_config: {}
+tags: []
+type: python
+uuid: woolies_cat_and_product_backfill
+variables_dir: /home/src/mage_data/oz-grocery-price-analysis
+widgets: []

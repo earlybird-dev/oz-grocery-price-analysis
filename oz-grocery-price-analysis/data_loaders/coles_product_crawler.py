@@ -310,6 +310,10 @@ def load_data(*args, **kwargs):
         scrape_data(driver, start_run_time, sub_coles_cat_l3)
 
 
+    print('driver.quit')
+    driver.quit()
+    print()
+
     return 'DONE!!!'
 
 
