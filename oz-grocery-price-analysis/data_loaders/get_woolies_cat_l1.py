@@ -64,10 +64,10 @@ def get_new_woolies_cat_l1(driver):
         for button in browse_buttons:
             if 'Browse' in button.text:
                 browse_button = button
-                print('found browse button', button.text)
+                # print('found browse button', button.text)
                 browse_button.click()
                 break
-        print('clicked')
+        # print('clicked')
         time.sleep(SLEEP_TIME)
 
         browse_menu = driver.find_element(By.CLASS_NAME, 'category-list')
@@ -132,14 +132,14 @@ def load_data(*args, **kwargs):
     woolies_cat_l1 = woolies_cat_l1[['newly_added', 'updated_at']].max().reset_index()
     woolies_cat_l1= woolies_cat_l1[['updated_at', 'newly_added', 'cat_l1_id', 'cat_l1_name', 'cat_l1_link']]
 
-    print()
-    print('woolies_cat_l1')
-    print(woolies_cat_l1)
-    print()
+    # print()
+    # print('woolies_cat_l1')
+    # print(woolies_cat_l1)
+    # print()
 
-    print('driver.quit')
+    # print('driver.quit')
     driver.quit()
-    print()
+    # print()
     
 
     return woolies_cat_l1

@@ -93,15 +93,15 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
 
     for index, cat_l3 in woolies_cat_l3.iterrows():
 
-        print()
-        print(f'INDEX---------------------------------: {index}')
+        # print()
+        # print(f'INDEX---------------------------------: {index}')
 
         cat_l1_id = cat_l3['cat_l1_id']
         cat_l2_id = cat_l3['cat_l2_id']
         cat_l3_id = cat_l3['cat_l3_id']
         cat_l3_link = cat_l3['cat_l3_link']
         cat_l3_link_updated_at = cat_l3['updated_at']
-        print(cat_l3_link)
+        # print(cat_l3_link)
 
         driver.get(cat_l3_link)
         time.sleep(SLEEP_TIME)
@@ -247,17 +247,17 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
                         product_count += 1
                         products.append(product_dict)
                         
-                    print(f'product_count: {product_count} - page: {i}')
+                    # print(f'product_count: {product_count} - page: {i}')
 
         # if index > 1:
         #     break
 
     if len(products) > 0:
         product_df = pd.DataFrame(products)
-        print()
-        print(f'TOTAL ROWS: {len(product_df)}')
-        print(f'RUNNING TIME: {datetime.datetime.now(TZ)-now_time}')
-        print()
+        # print()
+        # print(f'TOTAL ROWS: {len(product_df)}')
+        # print(f'RUNNING TIME: {datetime.datetime.now(TZ)-now_time}')
+        # print()
         export_product_data_to_big_query(product_df)
     
     if len(fail_to_get_product_tiles) > 0:
@@ -301,18 +301,18 @@ def load_data(*args, **kwargs):
     for i in range(number_of_bin):
         start_index = i*bin_size
         end_index = min(((i+1)*bin_size, number_of_categories))
-        print()
-        print(f'i: {i}, start_index: {start_index}, end_index: {end_index-1}')
-        print()
+        # print()
+        # print(f'i: {i}, start_index: {start_index}, end_index: {end_index-1}')
+        # print()
 
         sub_woolies_cat_l3 = woolies_cat_l3.iloc[start_index:end_index]
         scrape_data(driver, start_run_time, sub_woolies_cat_l3)
 
-    print()
+    # print()
     
-    print('driver.quit')
+    # print('driver.quit')
     driver.quit()
-    print()
+    # print()
 
     return 'DONE!!!'
 

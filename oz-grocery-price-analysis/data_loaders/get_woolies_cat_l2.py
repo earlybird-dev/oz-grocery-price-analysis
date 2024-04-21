@@ -73,8 +73,8 @@ def get_new_woolies_cat_l2(driver, woolies_cat_l1):
             if attempts > 2:
                 stop_condition = True
 
-            print()
-            print(f'INDEX------------------: {index} - ATTEMPT------------------: {attempts}')
+            # print()
+            # print(f'INDEX------------------: {index} - ATTEMPT------------------: {attempts}')
 
             cat_l1_id = cat_l1['cat_l1_id']
             cat_l1_link = cat_l1['cat_l1_link']
@@ -145,11 +145,11 @@ def load_data(*args, **kwargs):
 
     # Retrieve woolies level 1 categories
     woolies_cat_l1 = load_woolies_cat_l1_from_big_query()
-    print('woolies_cat_l1', woolies_cat_l1)
+    # print('woolies_cat_l1', woolies_cat_l1)
 
     # Get woolies level 2 categories
     new_woolies_cat_l2 = get_new_woolies_cat_l2(driver, woolies_cat_l1)
-    print('new_woolies_cat_l2', new_woolies_cat_l2)
+    # print('new_woolies_cat_l2', new_woolies_cat_l2)
 
     current_woolies_cat_l2 = load_woolies_cat_l2_from_big_query()
     if current_woolies_cat_l2 is not None:
@@ -160,14 +160,14 @@ def load_data(*args, **kwargs):
     woolies_cat_l2 = woolies_cat_l2[['newly_added', 'updated_at']].max().reset_index()
     woolies_cat_l2= woolies_cat_l2[['updated_at', 'newly_added', 'cat_l1_id', 'cat_l2_id', 'cat_l2_name', 'cat_l2_link']]
     
-    print()
-    print('woolies_cat_l2')
-    print(woolies_cat_l2)
-    print()
+    # print()
+    # print('woolies_cat_l2')
+    # print(woolies_cat_l2)
+    # print()
 
-    print('driver.quit')
+    # print('driver.quit')
     driver.quit()
-    print()
+    # print()
 
     return woolies_cat_l2
 
