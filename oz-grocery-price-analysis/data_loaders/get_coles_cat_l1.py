@@ -121,14 +121,14 @@ def load_data(*args, **kwargs):
     coles_cat_l1 = coles_cat_l1[['newly_added', 'updated_at']].max().reset_index()
     coles_cat_l1= coles_cat_l1[['updated_at', 'newly_added', 'cat_l1_id', 'cat_l1_name', 'cat_l1_link']]
 
-    # print()
-    # print('coles_cat_l1')
-    # print(coles_cat_l1)
-    # print()
+    print()
+    print('coles_cat_l1')
+    print(coles_cat_l1)
+    print()
 
-    # print('driver.quit')
+    print('driver.quit')
     driver.quit()
-    # print()
+    print()
 
     return coles_cat_l1
 

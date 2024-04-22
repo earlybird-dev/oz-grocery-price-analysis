@@ -71,8 +71,8 @@ def get_new_coles_cat_l2(driver, coles_cat_l1):
             if attempts > 2:
                 stop_condition = True
 
-            # print()
-            # print(f'INDEX------------------: {index} - ATTEMPT------------------: {attempts}')
+            print()
+            print(f'INDEX------------------: {index} - ATTEMPT------------------: {attempts}')
 
             cat_l1_id = cat_l1['cat_l1_id']
             cat_l1_link = cat_l1['cat_l1_link']
@@ -134,11 +134,11 @@ def load_data(*args, **kwargs):
 
     # Retrieve coles level 1 categories
     coles_cat_l1 = load_coles_cat_l1_from_big_query()
-    # print('coles_cat_l1', coles_cat_l1)
+    print('coles_cat_l1', coles_cat_l1)
 
     # Get coles level 2 categories
     new_coles_cat_l2 = get_new_coles_cat_l2(driver, coles_cat_l1)
-    # print('new_coles_cat_l2', new_coles_cat_l2)
+    print('new_coles_cat_l2', new_coles_cat_l2)
 
     current_coles_cat_l2 = load_coles_cat_l2_from_big_query()
     if current_coles_cat_l2 is not None:
@@ -149,14 +149,14 @@ def load_data(*args, **kwargs):
     coles_cat_l2 = coles_cat_l2[['newly_added', 'updated_at']].max().reset_index()
     coles_cat_l2= coles_cat_l2[['updated_at', 'newly_added', 'cat_l1_id', 'cat_l2_id', 'cat_l2_name', 'cat_l2_link']]
     
-    # print()
-    # print('coles_cat_l2')
-    # print(coles_cat_l2)
-    # print()
+    print()
+    print('coles_cat_l2')
+    print(coles_cat_l2)
+    print()
 
-    # print('driver.quit')
+    print('driver.quit')
     driver.quit()
-    # print()
+    print()
 
     return coles_cat_l2
  

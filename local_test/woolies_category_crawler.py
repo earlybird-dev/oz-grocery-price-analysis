@@ -29,7 +29,7 @@ def get_woolies_cat_l1(driver):
     time.sleep(SLEEP_TIME)
     # category_items = driver.find_element(By.CSS_SELECTOR, css_selector)
     # category_items = category_items.text
-    # print(category_items)
+    print(category_items)
     browse_menu = driver.find_element(By.CLASS_NAME, "category-list")
     browse_menu_items = browse_menu.find_elements(By.CSS_SELECTOR, "a.ng-star-inserted")
 
