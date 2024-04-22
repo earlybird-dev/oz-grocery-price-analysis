@@ -28,7 +28,7 @@ RUN apt-get install -y libu2f-udev
 RUN apt-get install -y libvulkan1
 RUN wget http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb
 RUN dpkg -i google-chrome-stable_114.0.5735.90-1_amd64.deb
-RUN wget -N https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip -P ~/
+RUN wget -N https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip
 RUN unzip -o chromedriver_linux64.zip -d .
 RUN rm chromedriver_linux64.zip
 RUN rm google-chrome-stable_114.0.5735.90-1_amd64.deb
