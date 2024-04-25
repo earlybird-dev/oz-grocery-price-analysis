@@ -288,7 +288,6 @@ def load_data(*args, **kwargs):
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--start-maximized')
-    driver = webdriver.Chrome(service=service, options=options)
 
     start_run_time = datetime.datetime.now(TZ).strftime('%Y-%m-%d %H:%M:%S')
 
@@ -301,6 +300,10 @@ def load_data(*args, **kwargs):
     number_of_bin = math.ceil(number_of_categories / bin_size)
 
     for i in range(number_of_bin):
+
+        # Create a web driver
+        driver = webdriver.Chrome(service=service, options=options)
+        
         start_index = i*bin_size
         end_index = min(((i+1)*bin_size, number_of_categories))
         print()
@@ -310,12 +313,12 @@ def load_data(*args, **kwargs):
         sub_coles_cat_l3 = coles_cat_l3.iloc[start_index:end_index]
         scrape_data(driver, start_run_time, sub_coles_cat_l3)
 
+        # Quit the web driver to save memory
+        print('driver.quit')
+        driver.quit()
+        print()
 
-    print('driver.quit')
-    driver.quit()
-    print()
-
-    return 'DONE!!!'
+    return ''
 
 
 @test
