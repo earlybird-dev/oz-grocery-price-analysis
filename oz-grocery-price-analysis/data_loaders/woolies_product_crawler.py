@@ -249,8 +249,8 @@ def scrape_data(driver, start_run_time, woolies_cat_l3):
                         
                     print(f'product_count: {product_count} - page: {i}')
 
-        # if index > 1:
-        #     break
+        print("Deleteing cookies...")
+        driver.delete_all_cookies()
 
     if len(products) > 0:
         product_df = pd.DataFrame(products)

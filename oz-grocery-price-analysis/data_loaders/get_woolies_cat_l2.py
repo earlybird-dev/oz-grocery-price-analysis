@@ -63,7 +63,7 @@ def get_new_woolies_cat_l2(driver, woolies_cat_l1):
     categories = []
 
     for index, cat_l1 in woolies_cat_l1.iterrows():
-        
+
         stop_condition = False
         attempts = 0
         
@@ -113,6 +113,9 @@ def get_new_woolies_cat_l2(driver, woolies_cat_l1):
                     if (cat_l1_id in cat_dict['cat_l2_link']) & (cat_l1_id != cat_dict['cat_l2_id']):
                         if 'tobacco' not in cat_dict['cat_l2_id']:
                             categories.append(cat_dict)
+
+        print("Deleteing cookies...")
+        driver.delete_all_cookies()
 
     categories = pd.DataFrame(categories)
     categories = categories[['updated_at', 'newly_added', 'cat_l1_id', 'cat_l2_id', 'cat_l2_name', 'cat_l2_link']]

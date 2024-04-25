@@ -61,6 +61,9 @@ def get_new_coles_cat_l2(driver, coles_cat_l1):
     categories = []
 
     for index, cat_l1 in coles_cat_l1.iterrows():
+
+        print("Deleteing cookies...")
+        driver.delete_all_cookies()
         
         stop_condition = False
         attempts = 0

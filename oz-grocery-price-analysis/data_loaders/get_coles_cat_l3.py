@@ -63,7 +63,7 @@ def get_new_coles_cat_l3(driver, coles_cat_l2):
     categories = []
 
     for index, cat_l2 in coles_cat_l2.iterrows():
-
+        
         stop_condition = False
         attempts = 0
         
@@ -110,6 +110,8 @@ def get_new_coles_cat_l3(driver, coles_cat_l2):
                     if (cat_l2_id in cat_dict['cat_l3_link']) & (cat_l2_id != cat_dict['cat_l3_id']):
                         if 'tobacco' not in cat_dict['cat_l3_id']:
                             categories.append(cat_dict)
+        print("Deleteing cookies...")
+        driver.delete_all_cookies()
 
     categories = pd.DataFrame(categories)
     categories = categories[['updated_at', 'newly_added', 'cat_l1_id', 'cat_l2_id', 'cat_l3_id', 'cat_l3_name', 'cat_l3_link']]
