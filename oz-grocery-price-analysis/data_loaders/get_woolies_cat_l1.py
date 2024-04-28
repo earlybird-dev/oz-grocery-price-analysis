@@ -138,6 +138,7 @@ def load_data(*args, **kwargs):
     print()
 
     print('driver.quit')
+    driver.close()
     driver.quit()
     print()
     

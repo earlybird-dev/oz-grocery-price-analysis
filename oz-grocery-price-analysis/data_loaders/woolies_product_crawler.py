@@ -313,6 +313,7 @@ def load_data(*args, **kwargs):
 
         # Quit the web driver to save memory
         print('driver.quit')
+        driver.close()
         driver.quit()
         print()
 
