@@ -144,18 +144,6 @@ Pipelines include configurable triggers for automated execution:
 - **Weekly**: Category structure refresh
 - **On-demand**: Backfill operations
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test locally using the local_test scripts
-5. Submit a pull request
-
 ## 📝 License
 
 This project is for educational and research purposes. Please respect the terms of service of the target websites.
-
-## ⚠️ Disclaimer
-
-This tool is designed for legitimate price monitoring and research purposes. Users are responsible for complying with website terms of service and applicable laws regarding web scraping.
